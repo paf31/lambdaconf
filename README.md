@@ -12,7 +12,7 @@ PureScript is small strongly, statically typed compile-to-JS language, inspired 
 
 - Getting Started
 - Why PureScript?
-- PureScript 
+- PureScript Overview
 - Tutorials
     - Functional Graphics with HTML 5 Canvas
     - Property-Based Testing with QuickCheck
@@ -46,3 +46,62 @@ If you can't install via Hackage for any reason, you can follow along by using t
 
 ## Why?
 
+### Javascript Benefits
+           				
+- Universal
+- Libraries / npm, etc.
+- Functions
+
+### But ...
+
+JavaScript is ...
+
+- Verbose
+- Callback Hell
+- Classes / Inheritance
+- Type System
+
+### The "Type System"
+           				
+- `[1, "test", false]`
+- `if ("true") { ... }`
+- `123 + "456"`
+
+### Motivation
+
+- Generate simple readable efficient Javascript
+- A simple, hackable core language with a minimal feature set
+- Use the simple parts of Haskell
+- Trade-off between a theoretical ideal and generating high performance code
+
+### Contemporaries
+
+- TypeScript
+- Fay, GHCJS, Haste
+- Elm, Roy
+
+### Use Cases
+
+- End-to-end Javascript application development
+- Functional application logic, JS interface to the real world via FFI
+- Server-side or client-side Javascript
+
+- Async
+- FRP
+- Templating / DOM
+- Scripting
+- Linear Algebra
+
+## PureScript Overview
+
+### Features
+
+- Type Inference
+- An expressive type system
+    - Extensible records
+    - Extensible effects
+    - Type classes
+    - Rank N Types
+- Pattern matching
+- Simple FFI
+- Type safe support for mutation
