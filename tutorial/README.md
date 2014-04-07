@@ -2,7 +2,7 @@
 
 This tutorial can be run in `psci`. 
 
-Use the `starter-kit` project
+Use the `starter-kit` project to ensure that necessary libraries are available.
 
 Executable lines of code will be prefixed with `> `:
 
