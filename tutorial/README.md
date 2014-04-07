@@ -12,7 +12,7 @@ Executable lines of code will be prefixed with `> `:
   2
 ```
 
-After each line, press _Return_, and then _Ctrl+D_ to evaluate the expression.
+After each line, press _Return_, and finally use _Ctrl+D_ to evaluate the expression.
 
 ## Literal Values
 
@@ -100,9 +100,126 @@ Cannot unify () with (baz :: u2160 | u2163)
 
 This error indicates that the `baz` property does not exist on the object provided.
 
-## Functions
+## Calling Functions
+
+Let's call the `range` function in the `Data.Array` library.
+
+```
+> range 1 10
+
+[1,2,3,4,5,6,7,8,9,10]
+```
+
+Function arguments are separated with spaces.
+
+Functions can be partially applied. Create a version of `range` which fixes its first argument:
+
+```
+> let upTo = range 1
+  
+> upTo 5
+  
+[1,2,3,4,5]
+```
+
+## Writing Functions
+
+Functions are introduced by specifying their argument names on the left of the equals sign:
+
+```
+> let f n = n + 1
+```
+
+Try evaluating `f`:
+
+```
+> f 1
+
+  2
+```
+
+Now try using `f` in conjunction with some other functions:
+
+```
+> map f (upTo 5)
+
+  [2,3,4,5,6]
+```
+
+Here, `map` is being used as a higher order function: we are passing another function as an argument.
+
+## Recursion
+
+Functions can be defined recursively. Enter each case on a new line at the same indentation level:
+
+```
+> let
+    even 0 = true
+    even 1 = false
+    even n = even (n - 2)
+```
+
+Try evaulating `even`:
+
+```
+> even 10
+
+  true
+  
+> even 15
+
+  false
+```
+
+Find all the even numbers between 1 and 10:
+
+```
+> filter even (upTo 10)
+
+  [2,4,6,8,10]
+```
+
+#### Exercise 1
+
+Write a function `divBy3` which tests if a number is divisible by `3`. Test your function, and use it to find all numbers between 1 and 10 which are divisible by 3.
+
+#### Exercise 2
+
+Write a function which counts the number of numbers between 1 and `n` which are divisble by 3. (`n` should be an argument to your function). _Hint_: You may like to use the `length` function from `Data.Array`.
+
+## Inline functions
+
+This way of writing functions is used when writing top-level declarations.
+
+When using a function as an expression, you may not want to give it a name. In this case, you can introduce a function using a backslash and arrow:
+
+```
+> map (\n -> n + 1) (upTo 10)
+```
 
 ## Binary Operators
+
+Binary operators are just like functions but are written infix. We've already seen `+` and `-`. Try a few others now:
+
+```
+> true && false
+
+  false
+  
+> 0xFF | 0xFF00
+
+  65535
+```
+
+These operators are not built into the language - they are just functions. You can write your own by wrapping the operator in parentheses:
+
+```
+> let (..) = range
+
+> 1 .. 5
+
+  [1,2,3,4,5]
+```
 
 ## Array Indexing
 
