@@ -269,20 +269,123 @@ Failed pattern match
 
 Write a function `sum` which sums the values in an array of numbers. _Hint_: use pattern matching and recursion.
 
-## Array Indexing
+## Algebraic Data Types
 
-## Property Accessors
+Algebraic data types encapsulate different types of data in a similar way to structs and unions from C-like languages.
 
-## If-Then-Else Expressions
+A simple example is the `Maybe` data type, defined in `Data.Maybe`:
 
-## Operators
+```
+data Maybe a = Nothing | Just a
+```
 
-## Record Updates
+Find out some types and print some values.
 
-## Let Bindings
+```
+> :i Data.Maybe
+> :t Nothing
+
+  forall a. Data.Maybe.Maybe a
+ 
+> :t Just
+
+  forall a. a -> Data.Maybe.Maybe a
+ 
+> Just 10
+  
+  Just 10
+```
+
+We can pattern match based on which constructor was used:
+
+```
+> let maybeToNumber Nothing = 0
+      maybeToNumber (Just n) = n
+      
+> maybeToNumber Nothing
+
+  0
+```
+
+Another example is `Tuple` from `Data.Tuple`:
+
+```
+> :i Data.Tuple
+> :t Tuple
+
+  forall a b. a -> b -> Data.Tuple.Tuple a b
+  
+> let sumTuple (Tuple a b) = a + b
+
+> sumTuple (Tuple 1 2)
+
+  3
+```
+
+#### Exercise 4
+
+Write a function `tupleToMaybe` which takes a tuple-of-maybe values to a maybe-tuple value. After defining your function, the following should work:
+
+```
+> :t tupleToMaybe
+
+  forall t1 t2. Data.Tuple.Tuple (Data.Maybe.Maybe t1) (Data.Maybe.Maybe t2) 
+             -> Data.Maybe.Maybe (Data.Tuple.Tuple t1 t2)
+```
 
 ## Do Notation
 
+`do` notation is a simpler way of writing expressions with values-in-contexts, e.g. `Maybe a`:
+
+```
+> let bothJust x y = do 
+    a <- x
+    b <- y
+    Just (a + b)
+    
+> bothJust (Just 1) (Just 2)
+
+> bothJust Nothing (Just 2)
+```
+
+`bothJust` is actually a specific version of the `lift2` function from the `Control.Applicative` module:
+
+```
+> :i Control.Applicative
+
+> let addTwo = lift2 (+)
+
+> addTwo (Just 1) (Just 2)
+```
+
+But the new version doesn't just work with
+
+```
+> :i Data.Either
+
+> addTwo (Left "Error") (Right 3)
+  
+  Left Error
+  
+> addTwo [1,2,3] [4,5,6]
+  
+  [5,6,7,6,7,8,7,8,9]
+```
+
+Another example: find all pairs of numbers `a < b < 10` which add to 10:
+
+```
+> do a <- range 1 10
+     b <- range 1 10
+     if a + b == 10 then return (Tuple a b) else empty
+  
+  [Tuple(1, 9),Tuple(2, 8),Tuple(3, 7),Tuple(4, 6),Tuple(5, 5),Tuple(6, 4),Tuple(7, 3),Tuple(8, 2),Tuple(9, 1)]
+```
+
+### Exercise 5
+
+Find all Pythagorean triples `x^2 + y^2 = z^2` where `x < y < 100`.
+
 ## Extensible Records
 
-## Handling Effects
+
