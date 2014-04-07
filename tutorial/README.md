@@ -127,7 +127,7 @@ Functions can be partially applied. Create a version of `range` which fixes its 
 Functions are introduced by specifying their argument names on the left of the equals sign:
 
 ```
-> let f n = n + 1
+> let plusOne n = n + 1
 ```
 
 Try evaluating `f`:
@@ -141,7 +141,7 @@ Try evaluating `f`:
 Now try using `f` in conjunction with some other functions:
 
 ```
-> map f (upTo 5)
+> map plusOne (upTo 5)
 
   [2,3,4,5,6]
 ```
@@ -220,6 +220,54 @@ These operators are not built into the language - they are just functions. You c
 
   [1,2,3,4,5]
 ```
+
+## Pattern Matching
+
+We can define a function case-by-case, just like we did for `even`.
+
+There are several types of patterns. We've already seen literal patterns:
+
+```
+> let f 0 = 0
+      f n = f (n - 1) * 2
+```
+
+Here `0` is a literal pattern. It only matches the constant `0`. `n` is a variable pattern, which matches any input.
+
+An underscore indicates a wildcard pattern. It is like a variable pattern, but does not bind a name:
+
+```
+> let isZero 0 = true
+      isZero _ = false
+```
+
+We can also match fixed length arrays:
+
+```
+> let oneOrTwo [x] = x
+      oneOrTwo [x, _] = x
+      oneOrTow _ = 0
+```
+
+We can also match the head and tail of an array using a _cons_-pattern:
+
+```
+> let first (x : _) = x
+
+> first [] :: Number
+
+Failed pattern match
+
+> first [1, 2, 3]
+
+1
+
+> let second (_ : x : _) = x
+```
+
+#### Exercise 3
+
+Write a function `sum` which sums the values in an array of numbers. _Hint_: use pattern matching and recursion.
 
 ## Array Indexing
 
