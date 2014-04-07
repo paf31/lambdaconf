@@ -209,6 +209,15 @@ Binary operators are just like functions but are written infix. We've already se
 > 0xFF | 0xFF00
 
   65535
+  
+> [1, 2, 3] !! 1
+  
+  2
+  
+> "Hello " ++ "World"
+
+  Hello World
+  
 ```
 
 These operators are not built into the language - they are just functions. You can write your own by wrapping the operator in parentheses:
@@ -388,4 +397,26 @@ Find all Pythagorean triples `x^2 + y^2 = z^2` where `x < y < 100`.
 
 ## Extensible Records
 
+Extensible records are a feature of the PureScript type system which allow functions to be polymorphic in the labels appearing in object types:
 
+```
+> let fullName person = person.firstName ++ " " ++ person.lastName
+
+> fullName { firstName: "John", lastName: "Smith" }
+  
+  John Smith
+  
+> :t fullName
+
+  forall t1. { lastName :: Prim.String, firstName :: Prim.String | t1 } -> Prim.String
+
+> fullName { firstName: "John", lastName: "Smith", age: 30 }
+
+  John Smith
+```
+
+Extensible records are also useful for dealing with property updates:
+
+```
+> let makeOlder person = person { age = person.age + 1 }
+```
