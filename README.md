@@ -42,15 +42,22 @@ Clone the starter kit project and follow the instructions in the README file:
     
 ## Backup Option
 
-If you can't install via Hackage for any reason, you can follow along by using the [Try PureScript!](http://try.purescript.org) website.
+If you can't install via Hackage for any reason, you can follow along by using the [Try PureScript!](http://try.purescript.org) website or use a pre-prepared [Vagrant box](http://github.com/purescript/purescript-vagrant).
 
 ## Why?
 
 ### Javascript Benefits
            				
 - Universal
-- Libraries / npm, etc.
+- Libraries
 - Functions
+
+### Libraries
+
+- Grunt / Gulp
+- Bower
+- Browserify
+- NPM
 
 ### But ...
 
@@ -60,12 +67,6 @@ JavaScript is ...
 - Callback Hell
 - Classes / Inheritance
 - Type System
-
-### The "Type System"
-           				
-- `[1, "test", false]`
-- `if ("true") { ... }`
-- `123 + "456"`
 
 ### Motivation
 
@@ -86,13 +87,13 @@ JavaScript is ...
 - Functional application logic, JS interface to the real world via FFI
 - Server-side or client-side Javascript
 
-- Async
-- FRP
-- Templating / DOM
-- Scripting
-- Linear Algebra
+### Current Applications
 
-## PureScript Overview
+- Async
+- Reactive UI
+- FRP w/ websockets
+- DSLs
+- Parsing
 
 ### Features
 
