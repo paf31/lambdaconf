@@ -18,6 +18,17 @@ instance showString :: Show String where
 instance showBoolean :: Show Boolean where
   show true = "true"
   show false = "false"
+  
+instance showArray :: (Show a) => Show [a] where
+  show [] = "[]"
+  show (x : xs) = show x ++ " : " ++ show xs
+```
+
+From `Debug.Trace`:
+
+```
+print :: forall a. (Show a) => a -> Eff (trace :: Trace) {}
+print a = trace (show a)
 ```
 
 ## Property-Based Testing
