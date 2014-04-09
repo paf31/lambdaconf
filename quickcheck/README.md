@@ -103,3 +103,11 @@ Write an `Arb` instance for `Queue`.
 Uncomment the one test for `Queue` and ensure it passes.
 
 Try writing some new tests for `Queue`.
+
+#### Exercise 4
+
+`src/Underscore.js` contains a partial set of FFI bindings to the UnderscoreJS library.
+
+Install underscore (`npm install underscore`) and uncomment the test for underscore.
+
+Write some additional tests for UnderscoreJS.

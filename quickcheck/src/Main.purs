@@ -7,6 +7,8 @@ import Data.Array
 import qualified Data.Stack as S
 import qualified Data.Queue as Q
 
+import qualified Underscore as U
+
 import Test.QuickCheck
 
 data Priority = Low | High
@@ -27,6 +29,14 @@ main = do
 
   quickCheck $ \q n1 n2 -> Q.enqueue Low (n1 :: Number) (Q.enqueue High n2 q) == Q.enqueue High n2 (Q.enqueue Low n1 q)
   
+  -}
+
+  -- Underscore
+  
+  {-
+
+  quickCheck $ \arr -> U.map id arr == (arr :: [Number])
+
   -}
 
   Debug.Trace.trace "Done"
