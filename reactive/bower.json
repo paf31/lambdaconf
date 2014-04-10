@@ -15,6 +15,10 @@
     "tests"
   ],
   "dependencies": {
+    "purescript-free": "*",
+    "purescript-arrays": "*",
+    "purescript-jquery": "*",
+    "purescript-reactive": "*",
     "purescript-reactive-jquery": "*",
     "purescript-transformers": "*"
   }
