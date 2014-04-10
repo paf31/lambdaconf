@@ -60,6 +60,6 @@ Also make the `Number` argument a function argument to `snowflake` and `gasket`.
 
 Experiment with different `Drawing`s. Some ideas:
 
-- A [http://en.wikipedia.org/wiki/Koch_snowflake](Koch Snowflake)
+- A [Koch Snowflake](http://en.wikipedia.org/wiki/Koch_snowflake)
 - Write a function which repeats a `Drawing` along the vertices of a `Path`.
 - Extend the `Drawing` data type to allow rotations (you will need to edit `bower_components/purescript-drawing/src/Graphics/Canvas/Drawing.purs`).
