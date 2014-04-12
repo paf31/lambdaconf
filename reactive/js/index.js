@@ -1,0 +1,3 @@
+$(function() {
+  require("Main").main();
+});
