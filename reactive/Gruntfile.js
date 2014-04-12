@@ -6,6 +6,7 @@ module.exports = function(grunt) {
   
     files: [
       "src/**/*.purs",
+      "bower_components/scrap-your-markup/src/**/*.purs",
       "bower_components/purescript-*/src/**/*.purs",
       "bower_components/purescript-*/src/**/*.purs.hs"
     ],

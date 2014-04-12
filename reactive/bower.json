@@ -20,6 +20,7 @@
     "purescript-jquery": "*",
     "purescript-reactive": "*",
     "purescript-reactive-jquery": "*",
-    "purescript-transformers": "*"
+    "purescript-transformers": "*",
+    "scrap-your-markup": "*"
   }
 }
