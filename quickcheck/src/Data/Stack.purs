@@ -10,7 +10,6 @@ module Data.Stack
   , popMany
   ) where
 
-import Data.Array ((:))
 import Data.Maybe
 import Data.Tuple
 

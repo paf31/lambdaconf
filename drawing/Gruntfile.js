@@ -23,7 +23,6 @@ module.exports = function(grunt) {
     copy: [
       {
         expand: true, 
-//        flatten: true, 
         cwd: "output",
         src: ["**"], 
         dest: "tmp/node_modules/"

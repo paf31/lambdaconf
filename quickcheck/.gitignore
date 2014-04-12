@@ -1,4 +1,4 @@
+tmp/
+output/
 bower_components/
 node_modules/
-js/
-externs/

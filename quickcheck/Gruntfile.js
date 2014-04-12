@@ -4,30 +4,43 @@ module.exports = function(grunt) {
 
   grunt.initConfig({ 
   
-    mainFiles: [
+    files: [
       "src/**/*.purs",
       "bower_components/purescript-*/src/**/*.purs",
       "bower_components/purescript-*/src/**/*.purs.hs"
     ],
-    
+
     clean: {
-      lib: ["js"]
+      all: ["tmp", "output"]
     },
-  
-    psc: {
-      options: {
-        main: true
-      },
-      main: {
-        src: "<%=mainFiles%>",
-        dest: "js/Main.js"
+
+    pscMake: {
+      all: {
+        src: "<%=files%>"
       }
+    },
+
+    copy: [
+      {
+        expand: true,
+        cwd: "output",
+        src: ["**"],
+        dest: "tmp/node_modules/"
+      }, {
+        src: ["js/index.js"],
+        dest: "tmp/index.js"
+      }
+    ],
+
+    execute: {
+      src: "tmp/index.js"
     }
   });
 
+  grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-clean");
+  grunt.loadNpmTasks("grunt-execute")
   grunt.loadNpmTasks("grunt-purescript");
   
-  grunt.registerTask("main", ["psc:main"]);
-  grunt.registerTask("default", ["main"]);
+  grunt.registerTask("default", ["pscMake:all", "copy", "execute"]);
 };
