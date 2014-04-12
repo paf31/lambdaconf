@@ -4,26 +4,47 @@ module.exports = function(grunt) {
 
   grunt.initConfig({ 
   
-    libFiles: [
+    files: [
       "src/**/*.purs",
       "bower_components/purescript-*/src/**/*.purs",
       "bower_components/purescript-*/src/**/*.purs.hs"
     ],
     
     clean: {
-      lib: ["js", "externs"]
+      all: ["tmp", "output"]
     },
   
     pscMake: {
-      lib: {
-        src: "<%=libFiles%>"
+      all: {
+        src: "<%=files%>"
+      }
+    },
+
+    copy: [
+      {
+        expand: true, 
+//        flatten: true, 
+        cwd: "output",
+        src: ["**"], 
+        dest: "tmp/node_modules/"
+      }, {
+        src: ["js/index.js"],
+        dest: "tmp/index.js"
+      }
+    ],
+
+    browserify: {
+      all: {
+        src: ["tmp/index.js"],
+        dest: "html/index.js"
       }
     }
   });
 
   grunt.loadNpmTasks("grunt-contrib-clean");
+  grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-purescript");
-  
-  grunt.registerTask("lib", ["pscMake:lib"]);
-  grunt.registerTask("default", ["lib"]);
+  grunt.loadNpmTasks('grunt-browserify');
+ 
+  grunt.registerTask("default", ["pscMake:all", "copy", "browserify:all"]);
 };
