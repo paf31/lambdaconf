@@ -3,7 +3,7 @@ $(function() {
   require("Main").main();
 });
 
-},{"Main":24}],2:[function(require,module,exports){
+},{"Main":25}],2:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var $less$times = function (__dict_Functor_0) {
@@ -54,7 +54,7 @@ module.exports = {
     "*>": $times$greater, 
     "<*": $less$times
 };
-},{"Prelude":26}],3:[function(require,module,exports){
+},{"Prelude":27}],3:[function(require,module,exports){
 "use strict";
 function unsafeRunRef(f) {  return f;};
 module.exports = {
@@ -150,7 +150,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":26}],7:[function(require,module,exports){
+},{"Prelude":27}],7:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Pure = function (value0) {
@@ -295,7 +295,7 @@ module.exports = {
     monadTransFree: monadTransFree, 
     monadFreeFree: monadFreeFree
 };
-},{"Prelude":26}],8:[function(require,module,exports){
+},{"Prelude":27}],8:[function(require,module,exports){
 "use strict";
 function select(selector) {   return function () {     return jQuery(selector);   }; };
 function create(html) {   return function () {     return jQuery(html);   }; };
@@ -527,7 +527,7 @@ module.exports = {
     bindCheckedTwoWay: bindCheckedTwoWay, 
     bindValueTwoWay: bindValueTwoWay
 };
-},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Control.Monad.Eff.Unsafe":5,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.Array":11,"Data.Foreign":18,"Data.Traversable":21,"Prelude":26,"Prelude.Unsafe":25}],10:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Control.Monad.Eff.Unsafe":5,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.Array":11,"Data.Foreign":19,"Data.Traversable":22,"Prelude":27,"Prelude.Unsafe":26}],10:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
@@ -823,7 +823,7 @@ module.exports = {
     functorComputed: functorComputed, 
     monadComputed: monadComputed
 };
-},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Data.Monoid":20,"Prelude":26}],11:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Data.Monoid":21,"Prelude":27}],11:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Maybe = require("Data.Maybe");
@@ -1056,7 +1056,14 @@ module.exports = {
     monoidArray: monoidArray, 
     alternativeArray: alternativeArray
 };
-},{"Data.Maybe":19,"Prelude":26,"Prelude.Unsafe":25}],12:[function(require,module,exports){
+},{"Data.Maybe":20,"Prelude":27,"Prelude.Unsafe":26}],12:[function(require,module,exports){
+"use strict";
+var Data_DOM = require("Data.DOM");
+var style = Data_DOM.Attribute("style");
+module.exports = {
+    style: style
+};
+},{"Data.DOM":15}],13:[function(require,module,exports){
 "use strict";
 var Data_DOM = require("Data.DOM");
 var ul = Data_DOM.element("ul");
@@ -1069,7 +1076,7 @@ module.exports = {
     ul: ul, 
     div: div
 };
-},{"Data.DOM":14}],13:[function(require,module,exports){
+},{"Data.DOM":15}],14:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
@@ -1190,7 +1197,7 @@ module.exports = {
     renderJQuery: renderJQuery, 
     createElement: createElement
 };
-},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive":10,"Control.Reactive.JQuery":9,"Data.DOM":14,"Data.Foldable":17,"Data.Foreign":18,"Data.Monoid":20,"Prelude":26}],14:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive":10,"Control.Reactive.JQuery":9,"Data.DOM":15,"Data.Foldable":18,"Data.Foreign":19,"Data.Monoid":21,"Prelude":27}],15:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Free = require("Control.Monad.Free");
@@ -1452,7 +1459,7 @@ module.exports = {
     functorForEachData: functorForEachData, 
     functorHtmlF: functorHtmlF
 };
-},{"Control.Monad.Free":7,"Prelude":26}],15:[function(require,module,exports){
+},{"Control.Monad.Free":7,"Prelude":27}],16:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Left = function (value0) {
@@ -1615,7 +1622,7 @@ module.exports = {
     showEither: showEither, 
     eqEither: eqEither
 };
-},{"Prelude":26}],16:[function(require,module,exports){
+},{"Prelude":27}],17:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Ref = function (value0) {
@@ -1643,7 +1650,7 @@ module.exports = {
     liftRef: liftRef, 
     eqRef: eqRef
 };
-},{"Prelude":26}],17:[function(require,module,exports){
+},{"Prelude":27}],18:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Applicative = require("Control.Applicative");
@@ -1958,7 +1965,7 @@ module.exports = {
     foldableRef: foldableRef, 
     foldableTuple: foldableTuple
 };
-},{"Control.Applicative":2,"Data.Array":11,"Data.Maybe":19,"Data.Monoid":20,"Prelude":26}],18:[function(require,module,exports){
+},{"Control.Applicative":2,"Data.Array":11,"Data.Maybe":20,"Data.Monoid":21,"Prelude":27}],19:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Either = require("Data.Either");
@@ -2182,7 +2189,7 @@ module.exports = {
     readArray: readArray, 
     readMaybe: readMaybe
 };
-},{"Data.Array":11,"Data.Either":15,"Data.Maybe":19,"Data.Traversable":21,"Data.Tuple":22,"Prelude":26}],19:[function(require,module,exports){
+},{"Data.Array":11,"Data.Either":16,"Data.Maybe":20,"Data.Traversable":22,"Data.Tuple":23,"Prelude":27}],20:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Nothing = {
@@ -2388,7 +2395,7 @@ module.exports = {
     eqMaybe: eqMaybe, 
     ordMaybe: ordMaybe
 };
-},{"Prelude":26}],20:[function(require,module,exports){
+},{"Prelude":27}],21:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function mempty(dict) {
@@ -2408,7 +2415,7 @@ module.exports = {
     mempty: mempty, 
     monoidString: monoidString
 };
-},{"Prelude":26}],21:[function(require,module,exports){
+},{"Prelude":27}],22:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Tuple = require("Data.Tuple");
@@ -2598,7 +2605,7 @@ module.exports = {
     traversableMaybe: traversableMaybe, 
     traversableTuple: traversableTuple
 };
-},{"Data.Array":11,"Data.Either":15,"Data.Eq":16,"Data.Maybe":19,"Data.Tuple":22,"Prelude":26}],22:[function(require,module,exports){
+},{"Data.Array":11,"Data.Either":16,"Data.Eq":17,"Data.Maybe":20,"Data.Tuple":23,"Prelude":27}],23:[function(require,module,exports){
 "use strict";
 var Data_Array = require("Data.Array");
 var Prelude = require("Prelude");
@@ -2779,124 +2786,47 @@ module.exports = {
     bindTuple: bindTuple, 
     monadTuple: monadTuple
 };
-},{"Data.Array":11,"Data.Monoid":20,"Prelude":26}],23:[function(require,module,exports){
+},{"Data.Array":11,"Data.Monoid":21,"Prelude":27}],24:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
-var Control_Reactive = require("Control.Reactive");
-var Data_Array = require("Data.Array");
 var Control_Monad_Free = require("Control.Monad.Free");
 var Data_DOM = require("Data.DOM");
 var Data_DOM_Elements = require("Data.DOM.Elements");
-var Control_Monad_Eff = require("Control.Monad.Eff");
-var Data_DOM_Render_JQuery = require("Data.DOM.Render.JQuery");
-var mkTask = function (description) {
-    return function (completed) {
-        return {
-            description: description, 
-            completed: completed
-        };
-    };
-};
-var filterM = function (__dict_Monad_0) {
-    return function (_2) {
-        return function (_3) {
-            if (_3.length === 0) {
-                return Prelude.pure(__dict_Monad_0["__superclasses"]["Prelude.Applicative_0"]({}))([  ]);
-            };
-            if (_3.length > 0) {
-                var _7 = _3.slice(1);
-                return Prelude[">>="](__dict_Monad_0["__superclasses"]["Prelude.Bind_1"]({}))(_2(_3[0]))(function (_1) {
-                    if (_1) {
-                        return Prelude["<$>"](((__dict_Monad_0["__superclasses"]["Prelude.Applicative_0"]({}))["__superclasses"]["Prelude.Apply_0"]({}))["__superclasses"]["Prelude.Functor_0"]({}))(Prelude[":"](_3[0]))(filterM(__dict_Monad_0)(_2)(_7));
-                    };
-                    if (!_1) {
-                        return filterM(__dict_Monad_0)(_2)(_7);
-                    };
-                    throw "Failed pattern match";
-                });
-            };
-            throw "Failed pattern match";
-        };
-    };
-};
-var view = function (model) {
-    var statusMessage = function (count) {
-        return function (desc) {
-            return Prelude.show(Prelude.showNumber({}))(count) + " tasks remaining. Next task: " + desc;
-        };
-    };
-    var remainingTasks = Prelude[">>="](Control_Reactive.bindComputed({}))(Control_Reactive.toComputedArray(model.tasks))(function (_1) {
-        return filterM(Control_Reactive.monadComputed({}))(function (task) {
-            return Prelude["<$>"](Control_Reactive.functorComputed({}))(Prelude.not(Prelude.boolLikeBoolean({})))(Control_Reactive.toComputed(task.completed));
-        })(_1);
-    });
-    var taskCount = Prelude["<$>"](Control_Reactive.functorComputed({}))(Data_Array.length)(remainingTasks);
-    var nextTask = Prelude[">>="](Control_Reactive.bindComputed({}))(Prelude["<$>"](Control_Reactive.functorComputed({}))(Data_Array.head)(remainingTasks))(function (_1) {
-        if (_1.ctor === "Data.Maybe.Nothing") {
-            return Prelude["return"](Control_Reactive.monadComputed({}))("Done!");
-        };
-        if (_1.ctor === "Data.Maybe.Just") {
-            return Control_Reactive.toComputed((_1.values[0]).description);
-        };
-        throw "Failed pattern match";
-    });
-    return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.ul([  ])(Data_DOM.forEach(model.tasks)([  ])(function (task) {
-        return function (index) {
-            return Data_DOM_Elements.li([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.textBox(task.description)([  ]))(function (_3) {
-                return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.checkBox(task.completed)([  ]))(function (_2) {
-                    return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.button("Remove")([  ])(function __do() {
-                        var _1 = Control_Reactive.readRVar(index)();
-                        Control_Reactive.removeRArray(model.tasks)(_1)();
-                        return {};
-                    }))(function (_1) {
-                        return Prelude["return"](Control_Monad_Free.monadFree(Data_DOM.functorHtmlF({})))(Prelude["<>"](Control_Reactive.semigroupSubscription({}))(_3)(Prelude["<>"](Control_Reactive.semigroupSubscription({}))(_2)(_1)));
-                    });
-                });
-            }));
-        };
-    })))(function (_3) {
-        return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.p([  ])(Data_DOM.button("New Task")([  ])(function __do() {
-            var _2 = Prelude["<*>"](Control_Monad_Eff.applyEff({}))(Prelude["<$>"](Control_Monad_Eff.functorEff({}))(mkTask)(Control_Reactive.newRVar("")))(Control_Reactive.newRVar(false))();
-            var _1 = Control_Reactive.readRArray(model.tasks)();
-            return Control_Reactive.insertRArray(model.tasks)(_2)(Data_Array.length(_1))();
-        })))(function (_2) {
-            return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.p([  ])(Data_DOM.label(Prelude["<*>"](Control_Reactive.applyComputed({}))(Prelude["<$>"](Control_Reactive.functorComputed({}))(statusMessage)(taskCount))(nextTask))([  ])))(function (_1) {
-                return Prelude["return"](Control_Monad_Free.monadFree(Data_DOM.functorHtmlF({})))(Prelude["<>"](Control_Reactive.semigroupSubscription({}))(_3)(Prelude["<>"](Control_Reactive.semigroupSubscription({}))(_2)(_1)));
-            });
-        });
-    });
-};
-var bind = function (root) {
-    return function __do() {
-        var _1 = Control_Reactive.newRArray();
-        return Data_DOM_Render_JQuery.renderJQuery(root)(view({
-            tasks: _1
-        }))();
-    };
-};
-module.exports = {
-    bind: bind, 
-    filterM: filterM, 
-    view: view, 
-    mkTask: mkTask
-};
-},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Reactive":10,"Data.Array":11,"Data.DOM":14,"Data.DOM.Elements":12,"Data.DOM.Render.JQuery":13,"Prelude":26}],24:[function(require,module,exports){
-"use strict";
-var Prelude = require("Prelude");
+var Data_DOM_Attributes = require("Data.DOM.Attributes");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Control_Monad_JQuery = require("Control.Monad.JQuery");
-var Example3 = require("Example3");
-var main = Prelude[">>="](Control_Monad_Eff.bindEff({}))(Control_Monad_JQuery.select("body"))(Example3.bind);
+var Data_DOM_Render_JQuery = require("Data.DOM.Render.JQuery");
+var example = Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.text("Here is some text, "))(function (_) {
+    return Data_DOM.text("and here is some more text.");
+})))(function (_) {
+    return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.p([  ])(Data_DOM.text("This is a paragraph.")))(function (_) {
+        return Data_DOM_Elements.ul([ Data_DOM_Attributes.style("color: red;") ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.li([  ])(Data_DOM.text("This is ...")))(function (_) {
+            return Data_DOM_Elements.li([  ])(Data_DOM.text("... a red list."));
+        }));
+    });
+});
+var main = function __do() {
+    var _1 = Control_Monad_JQuery.select("body")();
+    return Data_DOM_Render_JQuery.renderJQuery(_1)(example)();
+};
+module.exports = {
+    main: main, 
+    example: example
+};
+},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Data.DOM":15,"Data.DOM.Attributes":12,"Data.DOM.Elements":13,"Data.DOM.Render.JQuery":14,"Prelude":27}],25:[function(require,module,exports){
+"use strict";
+var Example0 = require("Example0");
+var main = Example0.main;
 module.exports = {
     main: main
 };
-},{"Control.Monad.Eff":6,"Control.Monad.JQuery":8,"Example3":23,"Prelude":26}],25:[function(require,module,exports){
+},{"Example0":24}],26:[function(require,module,exports){
 "use strict";
 function unsafeIndex(xs) {  return function(n) {    return xs[n];  };};
 module.exports = {
     unsafeIndex: unsafeIndex
 };
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 var LT = {
     ctor: "Prelude.LT", 
