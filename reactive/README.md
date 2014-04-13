@@ -183,8 +183,6 @@ view model = do
 
 Change `Main.purs` to enable example 2. Try out the UI.
 
-Change the `morning` field to a field which controls whether the other fields are editable or not (if checked, the first two fields should be text boxes, otherwise labels).
-
 ### Buttons
 
 Buttons can be bound to actions which can modify the state of the model:
