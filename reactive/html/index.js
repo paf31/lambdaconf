@@ -3,7 +3,7 @@ $(function() {
   require("Main").main();
 });
 
-},{"Main":14}],2:[function(require,module,exports){
+},{"Main":23}],2:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var $less$times = function (__dict_Functor_0) {
@@ -54,7 +54,31 @@ module.exports = {
     "*>": $times$greater, 
     "<*": $less$times
 };
-},{"Prelude":16}],3:[function(require,module,exports){
+},{"Prelude":25}],3:[function(require,module,exports){
+"use strict";
+function unsafeRunRef(f) {  return f;};
+module.exports = {
+    unsafeRunRef: unsafeRunRef
+};
+},{}],4:[function(require,module,exports){
+"use strict";
+function newRef(val) {  return function () {    return { value: val };  };};
+function readRef(ref) {  return function() {    return ref.value;  };};
+function modifyRef(ref) {  return function(f) {    return function() {      ref.value = f(ref.value);      return {};    };  };};
+function writeRef(ref) {  return function(val) {    return function() {      ref.value = val;      return {};    };  };};
+module.exports = {
+    writeRef: writeRef, 
+    modifyRef: modifyRef, 
+    readRef: readRef, 
+    newRef: newRef
+};
+},{}],5:[function(require,module,exports){
+"use strict";
+function unsafeInterleaveEff(f) {  return f;};
+module.exports = {
+    unsafeInterleaveEff: unsafeInterleaveEff
+};
+},{}],6:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function returnE(a) {  return function() {    return a;  };};
@@ -126,7 +150,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":16}],4:[function(require,module,exports){
+},{"Prelude":25}],7:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Pure = function (value0) {
@@ -271,7 +295,7 @@ module.exports = {
     monadTransFree: monadTransFree, 
     monadFreeFree: monadFreeFree
 };
-},{"Prelude":16}],5:[function(require,module,exports){
+},{"Prelude":25}],8:[function(require,module,exports){
 "use strict";
 function select(selector) {   return function () {     return jQuery(selector);   }; };
 function create(html) {   return function () {     return jQuery(html);   }; };
@@ -311,18 +335,506 @@ module.exports = {
     create: create, 
     select: select
 };
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Control_Monad_Eff = require("Control.Monad.Eff");
+var Control_Reactive = require("Control.Reactive");
+var Control_Monad_JQuery = require("Control.Monad.JQuery");
+var Data_Foreign = require("Data.Foreign");
+var Control_Monad_Eff_Ref_Unsafe = require("Control.Monad.Eff.Ref.Unsafe");
+var Data_Traversable = require("Data.Traversable");
+var Control_Monad_Eff_Unsafe = require("Control.Monad.Eff.Unsafe");
+var Data_Array = require("Data.Array");
+var Control_Monad_Eff_Ref = require("Control.Monad.Eff.Ref");
+var Prelude_Unsafe = require("Prelude.Unsafe");
+var bindValueTwoWay = function (__dict_ReadForeign_0) {
+    return function (ref) {
+        return function (input) {
+            return function __do() {
+                var _2 = Control_Reactive.readRVar(ref)();
+                Control_Monad_JQuery.setValue(_2)(input)();
+                Prelude.flip(Control_Monad_JQuery.on("change"))(input)(function (_) {
+                    return Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude["<$>"](Control_Monad_Eff.functorEff({}))(Data_Foreign.parseForeign(Data_Foreign.read(__dict_ReadForeign_0)))(Control_Monad_JQuery.getValue(input)))(function (_1) {
+                        if (_1.ctor === "Data.Either.Right") {
+                            return Control_Reactive.writeRVar(ref)(_1.values[0]);
+                        };
+                        throw "Failed pattern match";
+                    });
+                })();
+                return Control_Reactive.subscribe(ref)(function (newValue) {
+                    return function __do() {
+                        Control_Monad_JQuery.setValue(newValue)(input)();
+                        return {};
+                    };
+                })();
+            };
+        };
+    };
+};
+var bindTextOneWay = function (comp) {
+    return function (el) {
+        return function __do() {
+            var _1 = Control_Reactive.readComputed(comp)();
+            var text = _1;
+            Control_Monad_JQuery.setText(text)(el)();
+            return Control_Reactive.subscribeComputed(comp)(function (text) {
+                return function __do() {
+                    Control_Monad_JQuery.setText(text)(el)();
+                    return {};
+                };
+            })();
+        };
+    };
+};
+var bindCheckedTwoWay = function (ref) {
+    return function (checkbox) {
+        return function __do() {
+            var _2 = Control_Reactive.readRVar(ref)();
+            Control_Monad_JQuery.setProp("checked")(_2)(checkbox)();
+            Prelude.flip(Control_Monad_JQuery.on("change"))(checkbox)(function (_) {
+                return Prelude[">>="](Control_Monad_Eff.bindEff({}))(Prelude["<$>"](Control_Monad_Eff.functorEff({}))(Data_Foreign.parseForeign(Data_Foreign.read(Data_Foreign.readBoolean({}))))(Control_Monad_JQuery.getProp("checked")(checkbox)))(function (_1) {
+                    if (_1.ctor === "Data.Either.Right") {
+                        return Control_Reactive.writeRVar(ref)(_1.values[0]);
+                    };
+                    throw "Failed pattern match";
+                });
+            })();
+            return Control_Reactive.subscribe(ref)(function (newValue) {
+                return function __do() {
+                    Control_Monad_JQuery.setProp("checked")(newValue)(checkbox)();
+                    return {};
+                };
+            })();
+        };
+    };
+};
+var bindArray = function (arr) {
+    return function (el) {
+        return function (create) {
+            return Control_Monad_Eff_Ref_Unsafe.unsafeRunRef(function __do() {
+                var _6 = Control_Reactive.readRArray(arr)();
+                return (function (_7) {
+                    return function __do() {
+                        var _5 = Data_Traversable.zipWithA(Control_Monad_Eff.functorEff({}))(Control_Monad_Eff.applicativeEff({}))(function (a) {
+                            return function (index) {
+                                return function __do() {
+                                    var _2 = Control_Reactive.newRVar(index)();
+                                    var _1 = Control_Monad_Eff_Unsafe.unsafeInterleaveEff(create(a)(_2))();
+                                    Control_Monad_JQuery.append(_1.el)(el)();
+                                    return {
+                                        el: _1.el, 
+                                        subscription: _1.subscription, 
+                                        index: _2
+                                    };
+                                };
+                            };
+                        })(_7)(Data_Array.range(0)(Data_Array.length(_7) - 1))();
+                        return (function (_6) {
+                            var elements$prime = _6;
+                            return function __do() {
+                                var _4 = Control_Monad_Eff_Ref.newRef(elements$prime)();
+                                return (function (_5) {
+                                    var elements = _5;
+                                    return Control_Reactive.subscribeArray(arr)(function (change) {
+                                        return (function (_4) {
+                                            if (_4.ctor === "Control.Reactive.Inserted") {
+                                                var _5 = _4.values[0];
+                                                var _6 = _4.values[1];
+                                                return function __do() {
+                                                    var _3 = Control_Reactive.newRVar(_6)();
+                                                    return (function (_4) {
+                                                        return function __do() {
+                                                            var _2 = Control_Monad_Eff_Unsafe.unsafeInterleaveEff(create(_5)(_4))();
+                                                            return (function (_3) {
+                                                                return function __do() {
+                                                                    var _1 = Control_Monad_Eff_Ref.readRef(elements)();
+                                                                    return (function (_2) {
+                                                                        return function __do() {
+                                                                            Data_Traversable.traverse(Data_Traversable.traversableArray({}))(Control_Monad_Eff.functorEff({}))(Control_Monad_Eff.applicativeEff({}))(function (_1) {
+                                                                                return Control_Reactive.modifyRVar(_1.index)(function (i) {
+                                                                                    return (i > _6) ? i + 1 : i;
+                                                                                });
+                                                                            })(_2)();
+                                                                            Control_Monad_Eff_Ref.modifyRef(elements)(Data_Array.insertAt(_6)({
+                                                                                el: _3.el, 
+                                                                                subscription: _3.subscription, 
+                                                                                index: _4
+                                                                            }))();
+                                                                            Control_Monad_JQuery.appendAtIndex(_6)(_3.el)(el)();
+                                                                            return {};
+                                                                        };
+                                                                    })(_1)();
+                                                                };
+                                                            })(_2)();
+                                                        };
+                                                    })(_3)();
+                                                };
+                                            };
+                                            if (_4.ctor === "Control.Reactive.Updated") {
+                                                return function __do() {
+                                                    var _2 = Prelude["<$>"](Control_Monad_Eff.functorEff({}))(Prelude.flip(Prelude_Unsafe.unsafeIndex)(_4.values[1]))(Control_Monad_Eff_Ref.readRef(elements))();
+                                                    _2.subscription.values[0]();
+                                                    Control_Monad_JQuery.remove(_2.el)();
+                                                    var _1 = Control_Monad_Eff_Unsafe.unsafeInterleaveEff(create(_4.values[0])(_2.index))();
+                                                    Control_Monad_Eff_Ref.modifyRef(elements)(Data_Array.updateAt(_4.values[1])({
+                                                        el: _1.el, 
+                                                        subscription: _1.subscription, 
+                                                        index: _2.index
+                                                    }))();
+                                                    Control_Monad_JQuery.appendAtIndex(_4.values[1])(_1.el)(el)();
+                                                    return {};
+                                                };
+                                            };
+                                            if (_4.ctor === "Control.Reactive.Removed") {
+                                                return function __do() {
+                                                    var _2 = Prelude["<$>"](Control_Monad_Eff.functorEff({}))(Prelude.flip(Prelude_Unsafe.unsafeIndex)(_4.values[0]))(Control_Monad_Eff_Ref.readRef(elements))();
+                                                    return (function (_3) {
+                                                        return function __do() {
+                                                            _3.subscription.values[0]();
+                                                            Control_Monad_JQuery.remove(_3.el)();
+                                                            Control_Monad_Eff_Ref.modifyRef(elements)(Data_Array.deleteAt(_4.values[0])(1))();
+                                                            var _1 = Control_Monad_Eff_Ref.readRef(elements)();
+                                                            return (function (_2) {
+                                                                return function __do() {
+                                                                    Data_Traversable.traverse(Data_Traversable.traversableArray({}))(Control_Monad_Eff.functorEff({}))(Control_Monad_Eff.applicativeEff({}))(function (_1) {
+                                                                        return Control_Reactive.modifyRVar(_1.index)(function (i) {
+                                                                            return (i > _4.values[0]) ? i - 1 : i;
+                                                                        });
+                                                                    })(_2)();
+                                                                    return {};
+                                                                };
+                                                            })(_1)();
+                                                        };
+                                                    })(_2)();
+                                                };
+                                            };
+                                            throw "Failed pattern match";
+                                        })(change);
+                                    });
+                                })(_4)();
+                            };
+                        })(_5)();
+                    };
+                })(_6)();
+            });
+        };
+    };
+};
+module.exports = {
+    bindArray: bindArray, 
+    bindTextOneWay: bindTextOneWay, 
+    bindCheckedTwoWay: bindCheckedTwoWay, 
+    bindValueTwoWay: bindValueTwoWay
+};
+},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Control.Monad.Eff.Unsafe":5,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.Array":11,"Data.Foreign":18,"Data.Traversable":21,"Prelude":25,"Prelude.Unsafe":24}],10:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Control_Monad_Eff = require("Control.Monad.Eff");
+var Data_Monoid = require("Data.Monoid");
+var Control_Monad_Eff_Ref_Unsafe = require("Control.Monad.Eff.Ref.Unsafe");
+var Control_Monad_Eff_Ref = require("Control.Monad.Eff.Ref");
+var Subscription = function (value0) {
+    return {
+        ctor: "Control.Reactive.Subscription", 
+        values: [ value0 ]
+    };
+};
+var Inserted = function (value0) {
+    return function (value1) {
+        return {
+            ctor: "Control.Reactive.Inserted", 
+            values: [ value0, value1 ]
+        };
+    };
+};
+var Updated = function (value0) {
+    return function (value1) {
+        return {
+            ctor: "Control.Reactive.Updated", 
+            values: [ value0, value1 ]
+        };
+    };
+};
+var Removed = function (value0) {
+    return {
+        ctor: "Control.Reactive.Removed", 
+        values: [ value0 ]
+    };
+};
+var Computed = function (value0) {
+    return {
+        ctor: "Control.Reactive.Computed", 
+        values: [ value0 ]
+    };
+};
+function newRVar(value) {  return function() {    return (function () {      function RVar(value) {        var self = this;        self.value = value;        self.listeners = [];        self.subscribe = function (listener) {          this.listeners.push(listener);          return Subscription(function() {            for (var i = 0; i < self.listeners.length; i++) {              if (self.listeners[i] === listener) {                self.listeners.splice(i, 1);                break;              }            }          });        };        self.update = function (value) {          self.value = value;          for (var i = 0; i < self.listeners.length; i++) {            self.listeners[i](value);          }        };      };      return new RVar(value);    })();  };};
+function newRArray() {    return (function () {      function RArray() {        var self = this;        self.values = [];        self.listeners = [];        self.subscribe = function (listener) {          this.listeners.push(listener);          return Subscription(function() {            for (var i = 0; i < self.listeners.length; i++) {              if (self.listeners[i] === listener) {                self.listeners.splice(i, 1);                break;              }            }          });        };        self.insert = function (value, index) {          self.values.splice(index, 0, value);          for (var i = 0; i < self.listeners.length; i++) {            self.listeners[i](Inserted(value)(index));          }        };        self.remove = function (index) {          self.values.splice(index, 1);          for (var i = 0; i < self.listeners.length; i++) {            self.listeners[i](Removed(index));          }        };        self.update = function (value, index) {          self.values[index] = index;          for (var i = 0; i < self.listeners.length; i++) {            self.listeners[i](Updated(value)(index));          }        };      };      return new RArray();    })();};
+function readRVar(ref) {  return function() {    return ref.value;  };};
+function readRArray(arr) {  return function() {    return arr.values;  };};
+function writeRVar(ref) {  return function (value) {    return function() {      ref.update(value);    };  };};
+function peekRArray(arr) {  return function(i) {    return arr.values[i];  };};
+function insertRArray(arr) {  return function (value) {    return function(index) {      return function() {        arr.insert(value, index);      };    };  };};
+function removeRArray(arr) {  return function(index) {    return function() {      arr.remove(index);    };  };};
+function updateRArray(arr) {  return function (value) {    return function(index) {      return function() {        arr.update(value, index);      };    };  };};
+function subscribe(ref) {  return function(f) {    return function() {      return ref.subscribe(function(value) {        f(value)();      });    };  };};
+function subscribeArray(arr) {  return function(f) {    return function() {      return arr.subscribe(function(value) {        f(value)();      });    };  };};
+var toComputedArray = function (arr) {
+    return Computed({
+        read: readRArray(arr), 
+        subscribe: function (f) {
+            return subscribeArray(arr)(function (_) {
+                return Prelude[">>="](Control_Monad_Eff.bindEff({}))(readRArray(arr))(f);
+            });
+        }
+    });
+};
+var toComputed = function (ref) {
+    return Computed({
+        read: readRVar(ref), 
+        subscribe: subscribe(ref)
+    });
+};
+var subscribeComputed = function (_1) {
+    return function (_2) {
+        return (_1.values[0]).subscribe(_2);
+    };
+};
+var showArrayChange = function (__dict_Show_0) {
+    return {
+        "__superclasses": {}, 
+        show: function (_1) {
+            if (_1.ctor === "Control.Reactive.Inserted") {
+                return "Inserted " + Prelude.show(__dict_Show_0)(_1.values[0]) + " at " + Prelude.show(Prelude.showNumber({}))(_1.values[1]);
+            };
+            if (_1.ctor === "Control.Reactive.Updated") {
+                return "Updated " + Prelude.show(Prelude.showNumber({}))(_1.values[1]) + " to " + Prelude.show(__dict_Show_0)(_1.values[0]);
+            };
+            if (_1.ctor === "Control.Reactive.Removed") {
+                return "Removed at index " + Prelude.show(Prelude.showNumber({}))(_1.values[0]);
+            };
+            throw "Failed pattern match";
+        }
+    };
+};
+var semigroupSubscription = function (_) {
+    return {
+        "__superclasses": {}, 
+        "<>": function (_1) {
+            return function (_2) {
+                return Subscription(function __do() {
+                    _1.values[0]();
+                    return _2.values[0]();
+                });
+            };
+        }
+    };
+};
+var readComputed = function (_1) {
+    return (_1.values[0]).read;
+};
+var monoidSubscription = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Semigroup_0": function (_) {
+                return semigroupSubscription({});
+            }
+        }, 
+        mempty: Subscription(Prelude["return"](Control_Monad_Eff.monadEff({}))({}))
+    };
+};
+var modifyRVar = function (v) {
+    return function (f) {
+        return function __do() {
+            var _1 = readRVar(v)();
+            return writeRVar(v)(f(_1))();
+        };
+    };
+};
+var applicativeComputed = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyComputed({});
+            }
+        }, 
+        pure: function (a) {
+            return Computed({
+                read: Prelude.pure(Control_Monad_Eff.applicativeEff({}))(a), 
+                subscribe: function (_) {
+                    return Prelude.pure(Control_Monad_Eff.applicativeEff({}))(Data_Monoid.mempty(monoidSubscription({})));
+                }
+            });
+        }
+    };
+};
+var applyComputed = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Functor_0": function (_) {
+                return functorComputed({});
+            }
+        }, 
+        "<*>": function (_3) {
+            return function (_4) {
+                return Computed({
+                    read: function __do() {
+                        var _2 = (_3.values[0]).read();
+                        var _1 = (_4.values[0]).read();
+                        return _2(_1);
+                    }, 
+                    subscribe: function (ob) {
+                        return function __do() {
+                            var _2 = (_3.values[0]).subscribe(function (f$prime) {
+                                return function __do() {
+                                    var _1 = (_4.values[0]).read();
+                                    return ob(f$prime(_1))();
+                                };
+                            })();
+                            var _1 = (_4.values[0]).subscribe(function (x$prime) {
+                                return function __do() {
+                                    var _1 = (_3.values[0]).read();
+                                    return ob(_1(x$prime))();
+                                };
+                            })();
+                            return Prelude["<>"](semigroupSubscription({}))(_2)(_1);
+                        };
+                    }
+                });
+            };
+        }
+    };
+};
+var functorComputed = function (_) {
+    return {
+        "__superclasses": {}, 
+        "<$>": Prelude.liftA1(applicativeComputed({}))
+    };
+};
+var bindComputed = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyComputed({});
+            }
+        }, 
+        ">>=": function (_6) {
+            return function (_7) {
+                return (function (_8, _9) {
+                    return Computed({
+                        read: function __do() {
+                            var _1 = (_8.values[0]).read();
+                            return (function (_2) {
+                                return (function (_1) {
+                                    return (_1.values[0]).read;
+                                })(_9(_2));
+                            })(_1)();
+                        }, 
+                        subscribe: function (ob) {
+                            return function __do() {
+                                var _5 = (_8.values[0]).read();
+                                return (function (_6) {
+                                    var initial = _6;
+                                    return (function (_5) {
+                                        var _6 = _5.values[0];
+                                        return function __do() {
+                                            var _4 = _6.subscribe(ob)();
+                                            return (function (_5) {
+                                                return function __do() {
+                                                    var _3 = Control_Monad_Eff_Ref_Unsafe.unsafeRunRef(Control_Monad_Eff_Ref.newRef(_5))();
+                                                    return (function (_4) {
+                                                        return function __do() {
+                                                            var _2 = (_8.values[0]).subscribe(function (a$prime) {
+                                                                return function __do() {
+                                                                    var _2 = Control_Monad_Eff_Ref_Unsafe.unsafeRunRef(Control_Monad_Eff_Ref.readRef(_4))();
+                                                                    return (function (_3) {
+                                                                        return function __do() {
+                                                                            _3.values[0]();
+                                                                            return (function (_2) {
+                                                                                return function __do() {
+                                                                                    Prelude[">>="](Control_Monad_Eff.bindEff({}))((_2.values[0]).read)(ob)();
+                                                                                    var _1 = (_2.values[0]).subscribe(ob)();
+                                                                                    return Control_Monad_Eff_Ref_Unsafe.unsafeRunRef(Control_Monad_Eff_Ref.writeRef(_4)(_1))();
+                                                                                };
+                                                                            })(_9(a$prime))();
+                                                                        };
+                                                                    })(_2)();
+                                                                };
+                                                            })();
+                                                            return Prelude["<>"](semigroupSubscription({}))(_2)(Subscription(function __do() {
+                                                                var _1 = Control_Monad_Eff_Ref_Unsafe.unsafeRunRef(Control_Monad_Eff_Ref.readRef(_4))();
+                                                                return _1.values[0]();
+                                                            }));
+                                                        };
+                                                    })(_3)();
+                                                };
+                                            })(_4)();
+                                        };
+                                    })(_9(initial));
+                                })(_5)();
+                            };
+                        }
+                    });
+                })(_6, _7);
+            };
+        }
+    };
+};
+var monadComputed = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Applicative_0": function (_) {
+                return applicativeComputed({});
+            }, 
+            "Prelude.Bind_1": function (_) {
+                return bindComputed({});
+            }
+        }
+    };
+};
+module.exports = {
+    Computed: Computed, 
+    Inserted: Inserted, 
+    Updated: Updated, 
+    Removed: Removed, 
+    Subscription: Subscription, 
+    subscribeComputed: subscribeComputed, 
+    readComputed: readComputed, 
+    toComputedArray: toComputedArray, 
+    toComputed: toComputed, 
+    modifyRVar: modifyRVar, 
+    subscribeArray: subscribeArray, 
+    subscribe: subscribe, 
+    updateRArray: updateRArray, 
+    removeRArray: removeRArray, 
+    insertRArray: insertRArray, 
+    peekRArray: peekRArray, 
+    writeRVar: writeRVar, 
+    readRArray: readRArray, 
+    readRVar: readRVar, 
+    newRArray: newRArray, 
+    newRVar: newRVar, 
+    semigroupSubscription: semigroupSubscription, 
+    monoidSubscription: monoidSubscription, 
+    showArrayChange: showArrayChange, 
+    bindComputed: bindComputed, 
+    applicativeComputed: applicativeComputed, 
+    applyComputed: applyComputed, 
+    functorComputed: functorComputed, 
+    monadComputed: monadComputed
+};
+},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Data.Monoid":20,"Prelude":25}],11:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Maybe = require("Data.Maybe");
 var Prelude_Unsafe = require("Prelude.Unsafe");
-function map (f) {  return function (arr) {    var l = arr.length;    var result = new Array(l);    for (var i = 0; i < l; i++) {      result[i] = f(arr[i]);    }    return result;  };};
+function snoc(l) {  return function (e) {    var l1 = l.slice();    l1.push(e);     return l1;  };};
 function length (xs) {  return xs.length;};
-function indexOf (l) {  return function (e) {    return l.indexOf(e);  };};
 function elem(l) {  return function (e) {    return l.indexOf(e) !== -1;  };};
-function lastIndexOf (l) {  return function (e) {    return l.lastIndexOf(e);  };};
-function concat (l1) {  return function (l2) {    return l1.concat(l2);  };};
-function joinWith (l) {  return function (s) {    return l.join(s);  };};
+function elemIndex (l) {  return function (e) {    return l.indexOf(e);  };};
+function elemLastIndex (l) {  return function (e) {    return l.lastIndexOf(e);  };};
+function append (l1) {  return function (l2) {    return l1.concat(l2);  };};
+function concat (xss) {  var result = [];  for (var i = 0, l = xss.length; i < l; i++) {    result.push.apply(result, xss[i]);  }  return result;};
 function reverse (l) {  return l.slice().reverse();};
 function drop (n) {  return function (l) {    return l.slice(n);  };};
 function take (n) {  return function (l) {    return l.slice(0, n);  };};
@@ -331,6 +843,7 @@ function insertAt (index) {  return function (a) {    return function (l) {     
 function deleteAt (index) {  return function (n) {    return function (l) {      var l1 = l.slice();      l1.splice(index, n);      return l1;    };   };};
 function updateAt (index) {  return function (a) {    return function (l) {      var l1 = l.slice();      l1[index] = a;      return l1;    };   };};
 function concatMap (f) {  return function (arr) {    var result = [];    for (var i = 0, l = arr.length; i < l; i++) {      Array.prototype.push.apply(result, f(arr[i]));    }    return result;  };};
+function map (f) {  return function (arr) {    var l = arr.length;    var result = new Array(l);    for (var i = 0; i < l; i++) {      result[i] = f(arr[i]);    }    return result;  };};
 function filter (f) {  return function (arr) {    var n = 0;    var result = [];    for (var i = 0, l = arr.length; i < l; i++) {      if (f(arr[i])) {        result[n++] = arr[i];      }    }    return result;  };};
 function zipWith (f) {  return function (xs) {    return function (ys) {      var l = xs.length < ys.length ? xs.length : ys.length;      var result = new Array(l);      for (var i = 0; i < l; i++) {        result[i] = f(xs[i])(ys[i]);      }      return result;    };  };};
 function sortJS (f) {  return function (l) {    return l.slice().sort(function (x, y) {      return f(x)(y);    });  };};
@@ -376,7 +889,7 @@ var singleton = function (a) {
 var semigroupArray = function (_) {
     return {
         "__superclasses": {}, 
-        "<>": concat
+        "<>": append
     };
 };
 var range = function (_1) {
@@ -386,6 +899,12 @@ var range = function (_1) {
         };
         return Prelude[":"](_1)(range(_1 + 1)(_2));
     };
+};
+var $$null = function (_1) {
+    if (_1.length === 0) {
+        return true;
+    };
+    return false;
 };
 var nubBy = function (_1) {
     return function (_2) {
@@ -414,11 +933,28 @@ var monoidArray = function (_) {
         mempty: [  ]
     };
 };
-var isEmpty = function (_1) {
-    if (_1.length === 0) {
-        return true;
+var last = function (__copy__1) {
+    var _1 = __copy__1;
+    tco: while (true) {
+        if (_1.length > 0) {
+            var _4 = _1.slice(1);
+            if (_4.length === 0) {
+                return Data_Maybe.Just(_1[0]);
+            };
+        };
+        if (_1.length > 0) {
+            var _6 = _1.slice(1);
+            _1 = _6;
+            continue tco;
+        };
+        return Data_Maybe.Nothing;
     };
-    return false;
+};
+var init = function (_1) {
+    if (_1.length === 0) {
+        return Data_Maybe.Nothing;
+    };
+    return Data_Maybe.Just(slice(0)(length(_1) - 1)(_1));
 };
 var head = function (_1) {
     if (_1.length > 0) {
@@ -478,7 +1014,7 @@ var alternativeArray = function (_) {
     return {
         "__superclasses": {}, 
         empty: [  ], 
-        "<|>": concat
+        "<|>": append
     };
 };
 module.exports = {
@@ -487,7 +1023,6 @@ module.exports = {
     nub: nub, 
     zipWith: zipWith, 
     range: range, 
-    isEmpty: isEmpty, 
     filter: filter, 
     concatMap: concatMap, 
     updateAt: updateAt, 
@@ -497,15 +1032,20 @@ module.exports = {
     take: take, 
     drop: drop, 
     reverse: reverse, 
-    joinWith: joinWith, 
     concat: concat, 
-    lastIndexOf: lastIndexOf, 
-    indexOf: indexOf, 
+    append: append, 
+    elemLastIndex: elemLastIndex, 
+    elemIndex: elemIndex, 
+    elem: elem, 
     length: length, 
     map: map, 
+    "null": $$null, 
+    init: init, 
     tail: tail, 
+    last: last, 
     head: head, 
     singleton: singleton, 
+    snoc: snoc, 
     "!!": $bang$bang, 
     functorArray: functorArray, 
     applyArray: applyArray, 
@@ -516,14 +1056,7 @@ module.exports = {
     monoidArray: monoidArray, 
     alternativeArray: alternativeArray
 };
-},{"Data.Maybe":12,"Prelude":16,"Prelude.Unsafe":15}],7:[function(require,module,exports){
-"use strict";
-var Data_DOM = require("Data.DOM");
-var style = Data_DOM.Attribute("style");
-module.exports = {
-    style: style
-};
-},{"Data.DOM":10}],8:[function(require,module,exports){
+},{"Data.Maybe":19,"Prelude":25,"Prelude.Unsafe":24}],12:[function(require,module,exports){
 "use strict";
 var Data_DOM = require("Data.DOM");
 var ul = Data_DOM.element("ul");
@@ -538,47 +1071,72 @@ module.exports = {
     ul: ul, 
     div: div
 };
-},{"Data.DOM":10}],9:[function(require,module,exports){
+},{"Data.DOM":14}],13:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Control_Monad_JQuery = require("Control.Monad.JQuery");
 var Data_Foldable = require("Data.Foldable");
-var Control_Monad_Free = require("Control.Monad.Free");
 var Data_DOM = require("Data.DOM");
+var Control_Reactive_JQuery = require("Control.Reactive.JQuery");
+var Data_Foreign = require("Data.Foreign");
+var Control_Monad_Free = require("Control.Monad.Free");
+var createElement = function (elem) {
+    return function (attrs) {
+        return function __do() {
+            var _1 = Control_Monad_JQuery.create("<" + elem + ">")();
+            return (function (_2) {
+                return function __do() {
+                    Data_Foldable["for_"](Control_Monad_Eff.functorEff({}))(Control_Monad_Eff.applicativeEff({}))(Data_Foldable.foldableArray({}))(attrs)(function (_1) {
+                        return Control_Monad_JQuery.setAttr(_1.values[0])(_1.values[1])(_2);
+                    })();
+                    return _2;
+                };
+            })(_1)();
+        };
+    };
+};
 var renderJQuery = function (root) {
-    var go = function (_2) {
-        return (function (_3) {
-            if (_3.ctor === "Data.DOM.Element") {
-                return function __do() {
-                    var _1 = Control_Monad_JQuery.create("<" + _3.values[0] + ">")();
-                    return (function (_2) {
-                        return function __do() {
-                            Data_Foldable["for_"](Control_Monad_Eff.functorEff({}))(Control_Monad_Eff.applicativeEff({}))(Data_Foldable.foldableArray({}))(_3.values[1])(function (_1) {
-                                return Control_Monad_JQuery.setAttr(_1.values[0])(_1.values[1])(_2);
-                            })();
-                            renderJQuery(_2)(_3.values[2])();
-                            Control_Monad_JQuery.append(_2)(root)();
-                            return _3.values[3]();
+    var go = function (_3) {
+        if (_3.ctor === "Data.DOM.Element") {
+            return Data_DOM.runElementData(_3.values[0])(function (elem) {
+                return function (attrs) {
+                    return function (children) {
+                        return function (k) {
+                            return function __do() {
+                                var _2 = createElement(elem)(attrs)();
+                                var _1 = renderJQuery(_2)(children)();
+                                Control_Monad_JQuery.append(_2)(root)();
+                                return k(_1)();
+                            };
                         };
-                    })(_1)();
+                    };
                 };
+            });
+        };
+        if (_3.ctor === "Data.DOM.Text") {
+            return function __do() {
+                Control_Monad_JQuery.appendText(_3.values[0])(root)();
+                return _3.values[1]();
             };
-            if (_3.ctor === "Data.DOM.Text") {
-                return function __do() {
-                    Control_Monad_JQuery.appendText(_3.values[0])(root)();
-                    return _3.values[1]();
-                };
+        };
+        if (_3.ctor === "Data.DOM.TextBox") {
+            return function __do() {
+                var _2 = createElement("input")(_3.values[1])();
+                var _1 = Control_Reactive_JQuery.bindValueTwoWay(Data_Foreign.readString({}))(_3.values[0])(_2)();
+                Control_Monad_JQuery.append(_2)(root)();
+                return _3.values[2](_1)();
             };
-            throw "Failed pattern match";
-        })(_2);
+        };
+        throw "Failed pattern match";
     };
     return Control_Monad_Free.iterM(Data_DOM.functorHtmlF({}))(Control_Monad_Eff.monadEff({}))(go);
 };
 module.exports = {
-    renderJQuery: renderJQuery
+    renderJQuery: renderJQuery, 
+    createElement: createElement
 };
-},{"Control.Monad.Eff":3,"Control.Monad.Free":4,"Control.Monad.JQuery":5,"Data.DOM":10,"Data.Foldable":11,"Prelude":16}],10:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive.JQuery":9,"Data.DOM":14,"Data.Foldable":17,"Data.Foreign":18,"Prelude":25}],14:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Free = require("Control.Monad.Free");
@@ -591,15 +1149,9 @@ var Attribute = function (value0) {
     };
 };
 var Element = function (value0) {
-    return function (value1) {
-        return function (value2) {
-            return function (value3) {
-                return {
-                    ctor: "Data.DOM.Element", 
-                    values: [ value0, value1, value2, value3 ]
-                };
-            };
-        };
+    return {
+        ctor: "Data.DOM.Element", 
+        values: [ value0 ]
     };
 };
 var Text = function (value0) {
@@ -610,16 +1162,69 @@ var Text = function (value0) {
         };
     };
 };
+var TextBox = function (value0) {
+    return function (value1) {
+        return function (value2) {
+            return {
+                ctor: "Data.DOM.TextBox", 
+                values: [ value0, value1, value2 ]
+            };
+        };
+    };
+};
+var MkElementData = function (value0) {
+    return {
+        ctor: "Data.DOM.MkElementData", 
+        values: [ value0 ]
+    };
+};
+var runElementData = function (_1) {
+    return function (_2) {
+        return _1.values[0](_2);
+    };
+};
+var mkElementData = function (elem) {
+    return function (attrs) {
+        return function (children) {
+            return function (k) {
+                return MkElementData(function (f) {
+                    return f(elem)(attrs)(children)(k);
+                });
+            };
+        };
+    };
+};
+var functorElementData = function (_) {
+    return {
+        "__superclasses": {}, 
+        "<$>": function (f) {
+            return function (ed) {
+                return runElementData(ed)(function (elem) {
+                    return function (attrs) {
+                        return function (children) {
+                            return function (k) {
+                                return mkElementData(elem)(attrs)(children)(Prelude["<<<"](Prelude.semigroupoidArr({}))(f)(k));
+                            };
+                        };
+                    };
+                });
+            };
+        }
+    };
+};
 var functorHtmlF = function (_) {
     return {
         "__superclasses": {}, 
         "<$>": function (_1) {
             return function (_2) {
                 if (_2.ctor === "Data.DOM.Element") {
-                    return Element(_2.values[0])(_2.values[1])(_2.values[2])(_1(_2.values[3]));
+                    return Element(Prelude["<$>"](functorElementData({}))(_1)(_2.values[0]));
                 };
                 if (_2.ctor === "Data.DOM.Text") {
                     return Text(_2.values[0])(_1(_2.values[1]));
+                };
+                if (_2.ctor === "Data.DOM.TextBox") {
+                    return TextBox(_2.values[0])(_2.values[1])(Prelude["<<<"](Prelude.semigroupoidArr({}))(_1)(_2.values[2]));
                 };
                 throw "Failed pattern match";
             };
@@ -629,22 +1234,228 @@ var functorHtmlF = function (_) {
 var text = function (s) {
     return Control_Monad_Free.liftF(functorHtmlF({}))(Control_Monad_Free.monadFree(functorHtmlF({})))(Control_Monad_Free.monadFreeFree(functorHtmlF({})))(Text(s)({}));
 };
+var textBox = function ($$var) {
+    return function (attrs) {
+        return Control_Monad_Free.liftF(functorHtmlF({}))(Control_Monad_Free.monadFree(functorHtmlF({})))(Control_Monad_Free.monadFreeFree(functorHtmlF({})))(TextBox($$var)(attrs)(function (s) {
+            return s;
+        }));
+    };
+};
 var element = function (elem) {
     return function (attrs) {
         return function (children) {
-            return Control_Monad_Free.Free(Element(elem)(attrs)(children)(Control_Monad_Free.Pure({})));
+            return Control_Monad_Free.liftF(functorHtmlF({}))(Control_Monad_Free.monadFree(functorHtmlF({})))(Control_Monad_Free.monadFreeFree(functorHtmlF({})))(Element(mkElementData(elem)(attrs)(children)(function (b) {
+                return b;
+            })));
         };
     };
 };
 module.exports = {
     Element: Element, 
     Text: Text, 
+    TextBox: TextBox, 
+    MkElementData: MkElementData, 
     Attribute: Attribute, 
+    textBox: textBox, 
     text: text, 
     element: element, 
+    runElementData: runElementData, 
+    mkElementData: mkElementData, 
+    functorElementData: functorElementData, 
     functorHtmlF: functorHtmlF
 };
-},{"Control.Monad.Free":4,"Prelude":16}],11:[function(require,module,exports){
+},{"Control.Monad.Free":7,"Prelude":25}],15:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Left = function (value0) {
+    return {
+        ctor: "Data.Either.Left", 
+        values: [ value0 ]
+    };
+};
+var Right = function (value0) {
+    return {
+        ctor: "Data.Either.Right", 
+        values: [ value0 ]
+    };
+};
+var showEither = function (__dict_Show_0) {
+    return function (__dict_Show_1) {
+        return {
+            "__superclasses": {}, 
+            show: function (_1) {
+                if (_1.ctor === "Data.Either.Left") {
+                    return "Left " + Prelude.show(__dict_Show_0)(_1.values[0]);
+                };
+                if (_1.ctor === "Data.Either.Right") {
+                    return "Right " + Prelude.show(__dict_Show_1)(_1.values[0]);
+                };
+                throw "Failed pattern match";
+            }
+        };
+    };
+};
+var functorEither = function (_) {
+    return {
+        "__superclasses": {}, 
+        "<$>": function (_1) {
+            return function (_2) {
+                if (_2.ctor === "Data.Either.Left") {
+                    return Left(_2.values[0]);
+                };
+                if (_2.ctor === "Data.Either.Right") {
+                    return Right(_1(_2.values[0]));
+                };
+                throw "Failed pattern match";
+            };
+        }
+    };
+};
+var eqEither = function (__dict_Eq_2) {
+    return function (__dict_Eq_3) {
+        return {
+            "__superclasses": {}, 
+            "==": function (_1) {
+                return function (_2) {
+                    if (_1.ctor === "Data.Either.Left") {
+                        if (_2.ctor === "Data.Either.Left") {
+                            return Prelude["=="](__dict_Eq_2)(_1.values[0])(_2.values[0]);
+                        };
+                    };
+                    if (_1.ctor === "Data.Either.Right") {
+                        if (_2.ctor === "Data.Either.Right") {
+                            return Prelude["=="](__dict_Eq_3)(_1.values[0])(_2.values[0]);
+                        };
+                    };
+                    return false;
+                };
+            }, 
+            "/=": function (a) {
+                return function (b) {
+                    return !Prelude["=="](eqEither(__dict_Eq_2)(__dict_Eq_3))(a)(b);
+                };
+            }
+        };
+    };
+};
+var either = function (_1) {
+    return function (_2) {
+        return function (_3) {
+            if (_3.ctor === "Data.Either.Left") {
+                return _1(_3.values[0]);
+            };
+            if (_3.ctor === "Data.Either.Right") {
+                return _2(_3.values[0]);
+            };
+            throw "Failed pattern match";
+        };
+    };
+};
+var isLeft = either(Prelude["const"](true))(Prelude["const"](false));
+var isRight = either(Prelude["const"](false))(Prelude["const"](true));
+var applyEither = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Functor_0": function (_) {
+                return functorEither({});
+            }
+        }, 
+        "<*>": function (_1) {
+            return function (_2) {
+                if (_1.ctor === "Data.Either.Left") {
+                    return Left(_1.values[0]);
+                };
+                if (_1.ctor === "Data.Either.Right") {
+                    return Prelude["<$>"](functorEither({}))(_1.values[0])(_2);
+                };
+                throw "Failed pattern match";
+            };
+        }
+    };
+};
+var bindEither = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyEither({});
+            }
+        }, 
+        ">>=": either(function (e) {
+            return function (_) {
+                return Left(e);
+            };
+        })(function (a) {
+            return function (f) {
+                return f(a);
+            };
+        })
+    };
+};
+var applicativeEither = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyEither({});
+            }
+        }, 
+        pure: Right
+    };
+};
+var monadEither = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Applicative_0": function (_) {
+                return applicativeEither({});
+            }, 
+            "Prelude.Bind_1": function (_) {
+                return bindEither({});
+            }
+        }
+    };
+};
+module.exports = {
+    Left: Left, 
+    Right: Right, 
+    isRight: isRight, 
+    isLeft: isLeft, 
+    either: either, 
+    functorEither: functorEither, 
+    applyEither: applyEither, 
+    applicativeEither: applicativeEither, 
+    bindEither: bindEither, 
+    monadEither: monadEither, 
+    showEither: showEither, 
+    eqEither: eqEither
+};
+},{"Prelude":25}],16:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Ref = function (value0) {
+    return {
+        ctor: "Data.Eq.Ref", 
+        values: [ value0 ]
+    };
+};
+var liftRef = function (_1) {
+    return function (_2) {
+        return function (_3) {
+            return _1(_2.values[0])(_3.values[0]);
+        };
+    };
+};
+var eqRef = function (_) {
+    return {
+        "__superclasses": {}, 
+        "==": liftRef(Prelude.refEq), 
+        "/=": liftRef(Prelude.refIneq)
+    };
+};
+module.exports = {
+    Ref: Ref, 
+    liftRef: liftRef, 
+    eqRef: eqRef
+};
+},{"Prelude":25}],17:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Applicative = require("Control.Applicative");
@@ -959,7 +1770,231 @@ module.exports = {
     foldableRef: foldableRef, 
     foldableTuple: foldableTuple
 };
-},{"Control.Applicative":2,"Data.Array":6,"Data.Maybe":12,"Data.Monoid":13,"Prelude":16}],12:[function(require,module,exports){
+},{"Control.Applicative":2,"Data.Array":11,"Data.Maybe":19,"Data.Monoid":20,"Prelude":25}],18:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
+var Data_Either = require("Data.Either");
+var Data_Traversable = require("Data.Traversable");
+var Data_Tuple = require("Data.Tuple");
+var Data_Array = require("Data.Array");
+var Data_Maybe = require("Data.Maybe");
+var ForeignParser = function (value0) {
+    return {
+        ctor: "Data.Foreign.ForeignParser", 
+        values: [ value0 ]
+    };
+};
+function fromString (str) {   try {     return Data_Either.Right(JSON.parse(str));   } catch (e) {     return Data_Either.Left(e.toString());   } };
+function readPrimType (typeName) {   return function (value) {     if (toString.call(value) == '[object ' + typeName + ']') {       return Data_Either.Right(value);    }     return Data_Either.Left('Value is not a ' + typeName + '');   }; };
+function readMaybeImpl (value) {   return value === undefined || value === null ? Data_Maybe.Nothing : Data_Maybe.Just(value); };
+function readPropImpl (k) {   return function (obj) {     return Data_Either.Right(obj[k]);  }; };
+var showForeignImpl = JSON.stringify;;
+function read(dict) {
+    return dict["read"];
+};
+var showForeign = function (_) {
+    return {
+        "__superclasses": {}, 
+        show: showForeignImpl
+    };
+};
+var readString = function (_) {
+    return {
+        "__superclasses": {}, 
+        read: ForeignParser(readPrimType("String"))
+    };
+};
+var readNumber = function (_) {
+    return {
+        "__superclasses": {}, 
+        read: ForeignParser(readPrimType("Number"))
+    };
+};
+var readBoolean = function (_) {
+    return {
+        "__superclasses": {}, 
+        read: ForeignParser(readPrimType("Boolean"))
+    };
+};
+var parseForeign = function (_1) {
+    return function (_2) {
+        return _1.values[0](_2);
+    };
+};
+var parseJSON = function (__dict_ReadForeign_0) {
+    return function (json) {
+        return Prelude[">>="](Data_Either.bindEither({}))(fromString(json))(parseForeign(read(__dict_ReadForeign_0)));
+    };
+};
+var functorForeignParser = function (_) {
+    return {
+        "__superclasses": {}, 
+        "<$>": function (_1) {
+            return function (_2) {
+                return ForeignParser(function (x) {
+                    return Prelude["<$>"](Data_Either.functorEither({}))(_1)(_2.values[0](x));
+                });
+            };
+        }
+    };
+};
+var applyForeignParser = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Functor_0": function (_) {
+                return functorForeignParser({});
+            }
+        }, 
+        "<*>": function (_1) {
+            return function (_2) {
+                return (function (_3, _4) {
+                    return ForeignParser(function (x) {
+                        return (function (_1) {
+                            if (_1.ctor === "Data.Either.Left") {
+                                return Data_Either.Left(_1.values[0]);
+                            };
+                            if (_1.ctor === "Data.Either.Right") {
+                                return Prelude["<$>"](Data_Either.functorEither({}))(_1.values[0])(_4.values[0](x));
+                            };
+                            throw "Failed pattern match";
+                        })(_3.values[0](x));
+                    });
+                })(_1, _2);
+            };
+        }
+    };
+};
+var bindForeignParser = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyForeignParser({});
+            }
+        }, 
+        ">>=": function (_1) {
+            return function (_2) {
+                return (function (_3, _4) {
+                    return ForeignParser(function (x) {
+                        return (function (_1) {
+                            if (_1.ctor === "Data.Either.Left") {
+                                return Data_Either.Left(_1.values[0]);
+                            };
+                            if (_1.ctor === "Data.Either.Right") {
+                                return parseForeign(_4(_1.values[0]))(x);
+                            };
+                            throw "Failed pattern match";
+                        })(_3.values[0](x));
+                    });
+                })(_1, _2);
+            };
+        }
+    };
+};
+var prop = function (__dict_ReadForeign_1) {
+    return function (p) {
+        return Prelude[">>="](bindForeignParser({}))(ForeignParser(function (x) {
+            return readPropImpl(p)(x);
+        }))(function (x) {
+            return ForeignParser(function (_) {
+                return (function (_1) {
+                    if (_1.ctor === "Data.Either.Right") {
+                        return Data_Either.Right(_1.values[0]);
+                    };
+                    if (_1.ctor === "Data.Either.Left") {
+                        return Data_Either.Left("Error reading property '" + p + "':\n" + _1.values[0]);
+                    };
+                    throw "Failed pattern match";
+                })(parseForeign(read(__dict_ReadForeign_1))(x));
+            });
+        });
+    };
+};
+var readArray = function (__dict_ReadForeign_2) {
+    return {
+        "__superclasses": {}, 
+        read: (function () {
+            var arrayItem = function (_1) {
+                return (function (_2) {
+                    return (function (_1) {
+                        if (_1.ctor === "Data.Either.Right") {
+                            return Data_Either.Right(_1.values[0]);
+                        };
+                        if (_1.ctor === "Data.Either.Left") {
+                            return Data_Either.Left("Error reading item at index " + Prelude.show(Prelude.showNumber({}))(_2.values[0]) + ":\n" + _1.values[0]);
+                        };
+                        throw "Failed pattern match";
+                    })(parseForeign(read(__dict_ReadForeign_2))(_2.values[1]));
+                })(_1);
+            };
+            return Prelude[">>="](bindForeignParser({}))(ForeignParser(readPrimType("Array")))(function (xs) {
+                return ForeignParser(function (_) {
+                    return Data_Traversable.traverse(Data_Traversable.traversableArray({}))(Data_Either.functorEither({}))(Data_Either.applicativeEither({}))(arrayItem)(Data_Tuple.zip(Data_Array.range(0)(Data_Array.length(xs)))(xs));
+                });
+            });
+        })()
+    };
+};
+var readMaybe = function (__dict_ReadForeign_3) {
+    return {
+        "__superclasses": {}, 
+        read: Prelude[">>="](bindForeignParser({}))(ForeignParser(Prelude["<<<"](Prelude.semigroupoidArr({}))(Data_Either.Right)(readMaybeImpl)))(function (x) {
+            return ForeignParser(function (_) {
+                if (x.ctor === "Data.Maybe.Just") {
+                    return Prelude[">>="](Data_Either.bindEither({}))(parseForeign(read(__dict_ReadForeign_3))(x.values[0]))(Prelude["<<<"](Prelude.semigroupoidArr({}))(Prelude["return"](Data_Either.monadEither({})))(Data_Maybe.Just));
+                };
+                if (x.ctor === "Data.Maybe.Nothing") {
+                    return Prelude["return"](Data_Either.monadEither({}))(Data_Maybe.Nothing);
+                };
+                throw "Failed pattern match";
+            });
+        })
+    };
+};
+var applicativeForeignParser = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyForeignParser({});
+            }
+        }, 
+        pure: function (x) {
+            return ForeignParser(function (_) {
+                return Data_Either.Right(x);
+            });
+        }
+    };
+};
+var monadForeignParser = function (_) {
+    return {
+        "__superclasses": {
+            "Prelude.Applicative_0": function (_) {
+                return applicativeForeignParser({});
+            }, 
+            "Prelude.Bind_1": function (_) {
+                return bindForeignParser({});
+            }
+        }
+    };
+};
+module.exports = {
+    ForeignParser: ForeignParser, 
+    prop: prop, 
+    read: read, 
+    parseJSON: parseJSON, 
+    parseForeign: parseForeign, 
+    showForeign: showForeign, 
+    functorForeignParser: functorForeignParser, 
+    bindForeignParser: bindForeignParser, 
+    applyForeignParser: applyForeignParser, 
+    applicativeForeignParser: applicativeForeignParser, 
+    monadForeignParser: monadForeignParser, 
+    readString: readString, 
+    readNumber: readNumber, 
+    readBoolean: readBoolean, 
+    readArray: readArray, 
+    readMaybe: readMaybe
+};
+},{"Data.Array":11,"Data.Either":15,"Data.Maybe":19,"Data.Traversable":21,"Data.Tuple":22,"Prelude":25}],19:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Nothing = {
@@ -1165,7 +2200,7 @@ module.exports = {
     eqMaybe: eqMaybe, 
     ordMaybe: ordMaybe
 };
-},{"Prelude":16}],13:[function(require,module,exports){
+},{"Prelude":25}],20:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function mempty(dict) {
@@ -1185,36 +2220,414 @@ module.exports = {
     mempty: mempty, 
     monoidString: monoidString
 };
-},{"Prelude":16}],14:[function(require,module,exports){
+},{"Prelude":25}],21:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
-var Data_DOM_Elements = require("Data.DOM.Elements");
+var Data_Tuple = require("Data.Tuple");
+var Data_Eq = require("Data.Eq");
+var Data_Maybe = require("Data.Maybe");
+var Data_Either = require("Data.Either");
+var Data_Array = require("Data.Array");
+function traverse(dict) {
+    return dict["traverse"];
+};
+function sequence(dict) {
+    return dict["sequence"];
+};
+var traversableTuple = function (_) {
+    return {
+        "__superclasses": {}, 
+        traverse: function (__dict_Functor_2) {
+            return function (__dict_Applicative_3) {
+                return function (_1) {
+                    return function (_2) {
+                        return Prelude["<$>"](__dict_Functor_2)(Data_Tuple.Tuple(_2.values[0]))(_1(_2.values[1]));
+                    };
+                };
+            };
+        }, 
+        sequence: function (__dict_Functor_4) {
+            return function (__dict_Applicative_5) {
+                return function (_1) {
+                    return Prelude["<$>"](__dict_Functor_4)(Data_Tuple.Tuple(_1.values[0]))(_1.values[1]);
+                };
+            };
+        }
+    };
+};
+var traversableRef = function (_) {
+    return {
+        "__superclasses": {}, 
+        traverse: function (__dict_Functor_6) {
+            return function (__dict_Applicative_7) {
+                return function (_1) {
+                    return function (_2) {
+                        return Prelude["<$>"](__dict_Functor_6)(Data_Eq.Ref)(_1(_2.values[0]));
+                    };
+                };
+            };
+        }, 
+        sequence: function (__dict_Functor_8) {
+            return function (__dict_Applicative_9) {
+                return function (_1) {
+                    return Prelude["<$>"](__dict_Functor_8)(Data_Eq.Ref)(_1.values[0]);
+                };
+            };
+        }
+    };
+};
+var traversableMaybe = function (_) {
+    return {
+        "__superclasses": {}, 
+        traverse: function (__dict_Functor_10) {
+            return function (__dict_Applicative_11) {
+                return function (_1) {
+                    return function (_2) {
+                        if (_2.ctor === "Data.Maybe.Nothing") {
+                            return Prelude.pure(__dict_Applicative_11)(Data_Maybe.Nothing);
+                        };
+                        if (_2.ctor === "Data.Maybe.Just") {
+                            return Prelude["<$>"](__dict_Functor_10)(Data_Maybe.Just)(_1(_2.values[0]));
+                        };
+                        throw "Failed pattern match";
+                    };
+                };
+            };
+        }, 
+        sequence: function (__dict_Functor_12) {
+            return function (__dict_Applicative_13) {
+                return function (_1) {
+                    if (_1.ctor === "Data.Maybe.Nothing") {
+                        return Prelude.pure(__dict_Applicative_13)(Data_Maybe.Nothing);
+                    };
+                    if (_1.ctor === "Data.Maybe.Just") {
+                        return Prelude["<$>"](__dict_Functor_12)(Data_Maybe.Just)(_1.values[0]);
+                    };
+                    throw "Failed pattern match";
+                };
+            };
+        }
+    };
+};
+var traversableEither = function (_) {
+    return {
+        "__superclasses": {}, 
+        traverse: function (__dict_Functor_14) {
+            return function (__dict_Applicative_15) {
+                return function (_1) {
+                    return function (_2) {
+                        if (_2.ctor === "Data.Either.Left") {
+                            return Prelude.pure(__dict_Applicative_15)(Data_Either.Left(_2.values[0]));
+                        };
+                        if (_2.ctor === "Data.Either.Right") {
+                            return Prelude["<$>"](__dict_Functor_14)(Data_Either.Right)(_1(_2.values[0]));
+                        };
+                        throw "Failed pattern match";
+                    };
+                };
+            };
+        }, 
+        sequence: function (__dict_Functor_16) {
+            return function (__dict_Applicative_17) {
+                return function (_1) {
+                    if (_1.ctor === "Data.Either.Left") {
+                        return Prelude.pure(__dict_Applicative_17)(Data_Either.Left(_1.values[0]));
+                    };
+                    if (_1.ctor === "Data.Either.Right") {
+                        return Prelude["<$>"](__dict_Functor_16)(Data_Either.Right)(_1.values[0]);
+                    };
+                    throw "Failed pattern match";
+                };
+            };
+        }
+    };
+};
+var traversableArray = function (_) {
+    return {
+        "__superclasses": {}, 
+        traverse: function (__dict_Functor_18) {
+            return function (__dict_Applicative_19) {
+                return function (_1) {
+                    return function (_2) {
+                        if (_2.length === 0) {
+                            return Prelude.pure(__dict_Applicative_19)([  ]);
+                        };
+                        if (_2.length > 0) {
+                            var _6 = _2.slice(1);
+                            return Prelude["<*>"](__dict_Applicative_19["__superclasses"]["Prelude.Apply_0"]({}))(Prelude["<$>"](__dict_Functor_18)(Prelude[":"])(_1(_2[0])))(traverse(traversableArray({}))(__dict_Functor_18)(__dict_Applicative_19)(_1)(_6));
+                        };
+                        throw "Failed pattern match";
+                    };
+                };
+            };
+        }, 
+        sequence: function (__dict_Functor_20) {
+            return function (__dict_Applicative_21) {
+                return function (_1) {
+                    if (_1.length === 0) {
+                        return Prelude.pure(__dict_Applicative_21)([  ]);
+                    };
+                    if (_1.length > 0) {
+                        var _4 = _1.slice(1);
+                        return Prelude["<*>"](__dict_Applicative_21["__superclasses"]["Prelude.Apply_0"]({}))(Prelude["<$>"](__dict_Functor_20)(Prelude[":"])(_1[0]))(sequence(traversableArray({}))(__dict_Functor_20)(__dict_Applicative_21)(_4));
+                    };
+                    throw "Failed pattern match";
+                };
+            };
+        }
+    };
+};
+var zipWithA = function (__dict_Functor_0) {
+    return function (__dict_Applicative_1) {
+        return function (f) {
+            return function (xs) {
+                return function (ys) {
+                    return sequence(traversableArray({}))(__dict_Functor_0)(__dict_Applicative_1)(Data_Array.zipWith(f)(xs)(ys));
+                };
+            };
+        };
+    };
+};
+var $$for = function (__dict_Functor_22) {
+    return function (__dict_Applicative_23) {
+        return function (__dict_Traversable_24) {
+            return function (x) {
+                return function (f) {
+                    return traverse(__dict_Traversable_24)(__dict_Functor_22)(__dict_Applicative_23)(f)(x);
+                };
+            };
+        };
+    };
+};
+module.exports = {
+    zipWithA: zipWithA, 
+    "for": $$for, 
+    sequence: sequence, 
+    traverse: traverse, 
+    traversableArray: traversableArray, 
+    traversableEither: traversableEither, 
+    traversableRef: traversableRef, 
+    traversableMaybe: traversableMaybe, 
+    traversableTuple: traversableTuple
+};
+},{"Data.Array":11,"Data.Either":15,"Data.Eq":16,"Data.Maybe":19,"Data.Tuple":22,"Prelude":25}],22:[function(require,module,exports){
+"use strict";
+var Data_Array = require("Data.Array");
+var Prelude = require("Prelude");
+var Data_Monoid = require("Data.Monoid");
+var Tuple = function (value0) {
+    return function (value1) {
+        return {
+            ctor: "Data.Tuple.Tuple", 
+            values: [ value0, value1 ]
+        };
+    };
+};
+var zip = Data_Array.zipWith(Tuple);
+var unzip = function (_1) {
+    return (function (_2) {
+        if (_2.length > 0) {
+            var _4 = _2.slice(1);
+            return (function (_1) {
+                return Tuple(Prelude[":"]((_2[0]).values[0])(_1.values[0]))(Prelude[":"]((_2[0]).values[1])(_1.values[1]));
+            })(unzip(_4));
+        };
+        if (_2.length === 0) {
+            return Tuple([  ])([  ]);
+        };
+        throw "Failed pattern match";
+    })(_1);
+};
+var uncurry = function (_1) {
+    return function (_2) {
+        return _1(_2.values[0])(_2.values[1]);
+    };
+};
+var swap = function (_1) {
+    return Tuple(_1.values[1])(_1.values[0]);
+};
+var snd = function (_1) {
+    return _1.values[1];
+};
+var showTuple = function (__dict_Show_0) {
+    return function (__dict_Show_1) {
+        return {
+            "__superclasses": {}, 
+            show: function (_1) {
+                return "Tuple(" + Prelude.show(__dict_Show_0)(_1.values[0]) + ", " + Prelude.show(__dict_Show_1)(_1.values[1]) + ")";
+            }
+        };
+    };
+};
+var functorTuple = function (_) {
+    return {
+        "__superclasses": {}, 
+        "<$>": function (_1) {
+            return function (_2) {
+                return Tuple(_2.values[0])(_1(_2.values[1]));
+            };
+        }
+    };
+};
+var fst = function (_1) {
+    return _1.values[0];
+};
+var eqTuple = function (__dict_Eq_5) {
+    return function (__dict_Eq_6) {
+        return {
+            "__superclasses": {}, 
+            "==": function (_1) {
+                return function (_2) {
+                    return Prelude["=="](__dict_Eq_5)(_1.values[0])(_2.values[0]) && Prelude["=="](__dict_Eq_6)(_1.values[1])(_2.values[1]);
+                };
+            }, 
+            "/=": function (t1) {
+                return function (t2) {
+                    return !Prelude["=="](eqTuple(__dict_Eq_5)(__dict_Eq_6))(t1)(t2);
+                };
+            }
+        };
+    };
+};
+var ordTuple = function (__dict_Ord_2) {
+    return function (__dict_Ord_3) {
+        return {
+            "__superclasses": {
+                "Prelude.Eq_0": function (_) {
+                    return eqTuple(__dict_Ord_2["__superclasses"]["Prelude.Eq_0"]({}))(__dict_Ord_3["__superclasses"]["Prelude.Eq_0"]({}));
+                }
+            }, 
+            compare: function (_1) {
+                return function (_2) {
+                    return (function (_3, _4) {
+                        return (function (_1) {
+                            if (_1.ctor === "Prelude.EQ") {
+                                return Prelude.compare(__dict_Ord_3)(_3.values[1])(_4.values[1]);
+                            };
+                            return _1;
+                        })(Prelude.compare(__dict_Ord_2)(_3.values[0])(_4.values[0]));
+                    })(_1, _2);
+                };
+            }
+        };
+    };
+};
+var curry = function (f) {
+    return function (a) {
+        return function (b) {
+            return f(Tuple(a)(b));
+        };
+    };
+};
+var applyTuple = function (__dict_Semigroup_8) {
+    return {
+        "__superclasses": {
+            "Prelude.Functor_0": function (_) {
+                return functorTuple({});
+            }
+        }, 
+        "<*>": function (_1) {
+            return function (_2) {
+                return Tuple(Prelude["<>"](__dict_Semigroup_8)(_1.values[0])(_2.values[0]))(_1.values[1](_2.values[1]));
+            };
+        }
+    };
+};
+var bindTuple = function (__dict_Semigroup_7) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyTuple(__dict_Semigroup_7);
+            }
+        }, 
+        ">>=": function (_1) {
+            return function (_2) {
+                return (function (_3, _4) {
+                    return (function (_1) {
+                        return Tuple(Prelude["<>"](__dict_Semigroup_7)(_3.values[0])(_1.values[0]))(_1.values[1]);
+                    })(_4(_3.values[1]));
+                })(_1, _2);
+            };
+        }
+    };
+};
+var applicativeTuple = function (__dict_Monoid_9) {
+    return {
+        "__superclasses": {
+            "Prelude.Apply_0": function (_) {
+                return applyTuple(__dict_Monoid_9["__superclasses"]["Prelude.Semigroup_0"]({}));
+            }
+        }, 
+        pure: Tuple(Data_Monoid.mempty(__dict_Monoid_9))
+    };
+};
+var monadTuple = function (__dict_Monoid_4) {
+    return {
+        "__superclasses": {
+            "Prelude.Applicative_0": function (_) {
+                return applicativeTuple(__dict_Monoid_4);
+            }, 
+            "Prelude.Bind_1": function (_) {
+                return bindTuple(__dict_Monoid_4["__superclasses"]["Prelude.Semigroup_0"]({}));
+            }
+        }
+    };
+};
+module.exports = {
+    Tuple: Tuple, 
+    swap: swap, 
+    unzip: unzip, 
+    zip: zip, 
+    uncurry: uncurry, 
+    curry: curry, 
+    snd: snd, 
+    fst: fst, 
+    showTuple: showTuple, 
+    eqTuple: eqTuple, 
+    ordTuple: ordTuple, 
+    functorTuple: functorTuple, 
+    applyTuple: applyTuple, 
+    applicativeTuple: applicativeTuple, 
+    bindTuple: bindTuple, 
+    monadTuple: monadTuple
+};
+},{"Data.Array":11,"Data.Monoid":20,"Prelude":25}],23:[function(require,module,exports){
+"use strict";
+var Prelude = require("Prelude");
 var Control_Monad_Free = require("Control.Monad.Free");
 var Data_DOM = require("Data.DOM");
-var Data_DOM_Attributes = require("Data.DOM.Attributes");
+var Data_DOM_Elements = require("Data.DOM.Elements");
+var Control_Reactive = require("Control.Reactive");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Control_Monad_JQuery = require("Control.Monad.JQuery");
 var Data_DOM_Render_JQuery = require("Data.DOM.Render.JQuery");
-var test = Data_DOM_Elements.div([  ])(Data_DOM_Elements.ul([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.li([  ])(Data_DOM.text("Item 1")))(function (_) {
-    return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.li([ Data_DOM_Attributes.style("color: red;") ])(Data_DOM.text("Item 2")))(function (_) {
-        return Data_DOM_Elements.li([  ])(Data_DOM.text("Item 3"));
+var view = function (model) {
+    return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.text("This value: "))(function (_) {
+        return Data_DOM.textBox(model)([  ]);
+    })))(function (_2) {
+        return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.text("should be the same as this value: "))(function (_) {
+            return Data_DOM.textBox(model)([  ]);
+        })))(function (_1) {
+            return Prelude["return"](Control_Monad_Free.monadFree(Data_DOM.functorHtmlF({})))(Prelude["<>"](Control_Reactive.semigroupSubscription({}))(_2)(_1));
+        });
     });
-})));
+};
 var main = function __do() {
+    var _2 = Control_Reactive.newRVar("Test")();
     var _1 = Control_Monad_JQuery.select("body")();
-    return Data_DOM_Render_JQuery.renderJQuery(_1)(test)();
+    return Data_DOM_Render_JQuery.renderJQuery(_1)(view(_2))();
 };
 module.exports = {
     main: main, 
-    test: test
+    view: view
 };
-},{"Control.Monad.Eff":3,"Control.Monad.Free":4,"Control.Monad.JQuery":5,"Data.DOM":10,"Data.DOM.Attributes":7,"Data.DOM.Elements":8,"Data.DOM.Render.JQuery":9,"Prelude":16}],15:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.DOM":14,"Data.DOM.Elements":12,"Data.DOM.Render.JQuery":13,"Prelude":25}],24:[function(require,module,exports){
 "use strict";
 function unsafeIndex(xs) {  return function(n) {    return xs[n];  };};
 module.exports = {
     unsafeIndex: unsafeIndex
 };
-},{}],16:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 "use strict";
 var LT = {
     ctor: "Prelude.LT", 
