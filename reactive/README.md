@@ -30,8 +30,8 @@ Which renders as
 > 
 > This is a paragraph.
 > 
-> - <span color="red">This is ...</span>
-> - <span color="red">... a red list.</span>
+> - <span style="color: red">This is ...</span>
+> - <span style="color: red">... a red list.</span>
 
 ### Reactive Variables
 
