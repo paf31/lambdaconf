@@ -3,7 +3,7 @@ $(function() {
   require("Main").main();
 });
 
-},{"Main":23}],2:[function(require,module,exports){
+},{"Main":24}],2:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var $less$times = function (__dict_Functor_0) {
@@ -54,7 +54,7 @@ module.exports = {
     "*>": $times$greater, 
     "<*": $less$times
 };
-},{"Prelude":25}],3:[function(require,module,exports){
+},{"Prelude":26}],3:[function(require,module,exports){
 "use strict";
 function unsafeRunRef(f) {  return f;};
 module.exports = {
@@ -150,7 +150,7 @@ module.exports = {
     bindEff: bindEff, 
     monadEff: monadEff
 };
-},{"Prelude":25}],7:[function(require,module,exports){
+},{"Prelude":26}],7:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Pure = function (value0) {
@@ -295,7 +295,7 @@ module.exports = {
     monadTransFree: monadTransFree, 
     monadFreeFree: monadFreeFree
 };
-},{"Prelude":25}],8:[function(require,module,exports){
+},{"Prelude":26}],8:[function(require,module,exports){
 "use strict";
 function select(selector) {   return function () {     return jQuery(selector);   }; };
 function create(html) {   return function () {     return jQuery(html);   }; };
@@ -527,7 +527,7 @@ module.exports = {
     bindCheckedTwoWay: bindCheckedTwoWay, 
     bindValueTwoWay: bindValueTwoWay
 };
-},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Control.Monad.Eff.Unsafe":5,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.Array":11,"Data.Foreign":18,"Data.Traversable":21,"Prelude":25,"Prelude.Unsafe":24}],10:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Control.Monad.Eff.Unsafe":5,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.Array":11,"Data.Foreign":19,"Data.Traversable":22,"Prelude":26,"Prelude.Unsafe":25}],10:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
@@ -823,7 +823,7 @@ module.exports = {
     functorComputed: functorComputed, 
     monadComputed: monadComputed
 };
-},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Data.Monoid":20,"Prelude":25}],11:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Eff.Ref":4,"Control.Monad.Eff.Ref.Unsafe":3,"Data.Monoid":21,"Prelude":26}],11:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Maybe = require("Data.Maybe");
@@ -1056,7 +1056,14 @@ module.exports = {
     monoidArray: monoidArray, 
     alternativeArray: alternativeArray
 };
-},{"Data.Maybe":19,"Prelude":25,"Prelude.Unsafe":24}],12:[function(require,module,exports){
+},{"Data.Maybe":20,"Prelude":26,"Prelude.Unsafe":25}],12:[function(require,module,exports){
+"use strict";
+var Data_DOM = require("Data.DOM");
+var style = Data_DOM.Attribute("style");
+module.exports = {
+    style: style
+};
+},{"Data.DOM":15}],13:[function(require,module,exports){
 "use strict";
 var Data_DOM = require("Data.DOM");
 var ul = Data_DOM.element("ul");
@@ -1071,7 +1078,7 @@ module.exports = {
     ul: ul, 
     div: div
 };
-},{"Data.DOM":14}],13:[function(require,module,exports){
+},{"Data.DOM":15}],14:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Eff = require("Control.Monad.Eff");
@@ -1120,10 +1127,26 @@ var renderJQuery = function (root) {
                 return _3.values[1]();
             };
         };
+        if (_3.ctor === "Data.DOM.Label") {
+            return function __do() {
+                var _2 = createElement("span")(_3.values[1])();
+                var _1 = Control_Reactive_JQuery.bindTextOneWay(_3.values[0])(_2)();
+                Control_Monad_JQuery.append(_2)(root)();
+                return _3.values[2](_1)();
+            };
+        };
         if (_3.ctor === "Data.DOM.TextBox") {
             return function __do() {
                 var _2 = createElement("input")(_3.values[1])();
                 var _1 = Control_Reactive_JQuery.bindValueTwoWay(Data_Foreign.readString({}))(_3.values[0])(_2)();
+                Control_Monad_JQuery.append(_2)(root)();
+                return _3.values[2](_1)();
+            };
+        };
+        if (_3.ctor === "Data.DOM.CheckBox") {
+            return function __do() {
+                var _2 = createElement("input")(Prelude[":"](Data_DOM.Attribute("type")("checkbox"))(_3.values[1]))();
+                var _1 = Control_Reactive_JQuery.bindCheckedTwoWay(_3.values[0])(_2)();
                 Control_Monad_JQuery.append(_2)(root)();
                 return _3.values[2](_1)();
             };
@@ -1136,7 +1159,7 @@ module.exports = {
     renderJQuery: renderJQuery, 
     createElement: createElement
 };
-},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive.JQuery":9,"Data.DOM":14,"Data.Foldable":17,"Data.Foreign":18,"Prelude":25}],14:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive.JQuery":9,"Data.DOM":15,"Data.Foldable":18,"Data.Foreign":19,"Prelude":26}],15:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Free = require("Control.Monad.Free");
@@ -1162,11 +1185,31 @@ var Text = function (value0) {
         };
     };
 };
+var Label = function (value0) {
+    return function (value1) {
+        return function (value2) {
+            return {
+                ctor: "Data.DOM.Label", 
+                values: [ value0, value1, value2 ]
+            };
+        };
+    };
+};
 var TextBox = function (value0) {
     return function (value1) {
         return function (value2) {
             return {
                 ctor: "Data.DOM.TextBox", 
+                values: [ value0, value1, value2 ]
+            };
+        };
+    };
+};
+var CheckBox = function (value0) {
+    return function (value1) {
+        return function (value2) {
+            return {
+                ctor: "Data.DOM.CheckBox", 
                 values: [ value0, value1, value2 ]
             };
         };
@@ -1223,12 +1266,25 @@ var functorHtmlF = function (_) {
                 if (_2.ctor === "Data.DOM.Text") {
                     return Text(_2.values[0])(_1(_2.values[1]));
                 };
+                if (_2.ctor === "Data.DOM.Label") {
+                    return Label(_2.values[0])(_2.values[1])(Prelude["<<<"](Prelude.semigroupoidArr({}))(_1)(_2.values[2]));
+                };
                 if (_2.ctor === "Data.DOM.TextBox") {
                     return TextBox(_2.values[0])(_2.values[1])(Prelude["<<<"](Prelude.semigroupoidArr({}))(_1)(_2.values[2]));
+                };
+                if (_2.ctor === "Data.DOM.CheckBox") {
+                    return CheckBox(_2.values[0])(_2.values[1])(Prelude["<<<"](Prelude.semigroupoidArr({}))(_1)(_2.values[2]));
                 };
                 throw "Failed pattern match";
             };
         }
+    };
+};
+var label = function (c) {
+    return function (attrs) {
+        return Control_Monad_Free.liftF(functorHtmlF({}))(Control_Monad_Free.monadFree(functorHtmlF({})))(Control_Monad_Free.monadFreeFree(functorHtmlF({})))(Label(c)(attrs)(function (s) {
+            return s;
+        }));
     };
 };
 var text = function (s) {
@@ -1250,13 +1306,24 @@ var element = function (elem) {
         };
     };
 };
+var checkBox = function ($$var) {
+    return function (attrs) {
+        return Control_Monad_Free.liftF(functorHtmlF({}))(Control_Monad_Free.monadFree(functorHtmlF({})))(Control_Monad_Free.monadFreeFree(functorHtmlF({})))(CheckBox($$var)(attrs)(function (s) {
+            return s;
+        }));
+    };
+};
 module.exports = {
     Element: Element, 
     Text: Text, 
+    Label: Label, 
     TextBox: TextBox, 
+    CheckBox: CheckBox, 
     MkElementData: MkElementData, 
     Attribute: Attribute, 
+    checkBox: checkBox, 
     textBox: textBox, 
+    label: label, 
     text: text, 
     element: element, 
     runElementData: runElementData, 
@@ -1264,7 +1331,7 @@ module.exports = {
     functorElementData: functorElementData, 
     functorHtmlF: functorHtmlF
 };
-},{"Control.Monad.Free":7,"Prelude":25}],15:[function(require,module,exports){
+},{"Control.Monad.Free":7,"Prelude":26}],16:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Left = function (value0) {
@@ -1427,7 +1494,7 @@ module.exports = {
     showEither: showEither, 
     eqEither: eqEither
 };
-},{"Prelude":25}],16:[function(require,module,exports){
+},{"Prelude":26}],17:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Ref = function (value0) {
@@ -1455,7 +1522,7 @@ module.exports = {
     liftRef: liftRef, 
     eqRef: eqRef
 };
-},{"Prelude":25}],17:[function(require,module,exports){
+},{"Prelude":26}],18:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Applicative = require("Control.Applicative");
@@ -1770,7 +1837,7 @@ module.exports = {
     foldableRef: foldableRef, 
     foldableTuple: foldableTuple
 };
-},{"Control.Applicative":2,"Data.Array":11,"Data.Maybe":19,"Data.Monoid":20,"Prelude":25}],18:[function(require,module,exports){
+},{"Control.Applicative":2,"Data.Array":11,"Data.Maybe":20,"Data.Monoid":21,"Prelude":26}],19:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Either = require("Data.Either");
@@ -1994,7 +2061,7 @@ module.exports = {
     readArray: readArray, 
     readMaybe: readMaybe
 };
-},{"Data.Array":11,"Data.Either":15,"Data.Maybe":19,"Data.Traversable":21,"Data.Tuple":22,"Prelude":25}],19:[function(require,module,exports){
+},{"Data.Array":11,"Data.Either":16,"Data.Maybe":20,"Data.Traversable":22,"Data.Tuple":23,"Prelude":26}],20:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Nothing = {
@@ -2200,7 +2267,7 @@ module.exports = {
     eqMaybe: eqMaybe, 
     ordMaybe: ordMaybe
 };
-},{"Prelude":25}],20:[function(require,module,exports){
+},{"Prelude":26}],21:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 function mempty(dict) {
@@ -2220,7 +2287,7 @@ module.exports = {
     mempty: mempty, 
     monoidString: monoidString
 };
-},{"Prelude":25}],21:[function(require,module,exports){
+},{"Prelude":26}],22:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Data_Tuple = require("Data.Tuple");
@@ -2410,7 +2477,7 @@ module.exports = {
     traversableMaybe: traversableMaybe, 
     traversableTuple: traversableTuple
 };
-},{"Data.Array":11,"Data.Either":15,"Data.Eq":16,"Data.Maybe":19,"Data.Tuple":22,"Prelude":25}],22:[function(require,module,exports){
+},{"Data.Array":11,"Data.Either":16,"Data.Eq":17,"Data.Maybe":20,"Data.Tuple":23,"Prelude":26}],23:[function(require,module,exports){
 "use strict";
 var Data_Array = require("Data.Array");
 var Prelude = require("Prelude");
@@ -2591,17 +2658,64 @@ module.exports = {
     bindTuple: bindTuple, 
     monadTuple: monadTuple
 };
-},{"Data.Array":11,"Data.Monoid":20,"Prelude":25}],23:[function(require,module,exports){
+},{"Data.Array":11,"Data.Monoid":21,"Prelude":26}],24:[function(require,module,exports){
 "use strict";
 var Prelude = require("Prelude");
 var Control_Monad_Free = require("Control.Monad.Free");
 var Data_DOM = require("Data.DOM");
 var Data_DOM_Elements = require("Data.DOM.Elements");
 var Control_Reactive = require("Control.Reactive");
+var Data_DOM_Attributes = require("Data.DOM.Attributes");
 var Control_Monad_Eff = require("Control.Monad.Eff");
-var Control_Monad_JQuery = require("Control.Monad.JQuery");
 var Data_DOM_Render_JQuery = require("Data.DOM.Render.JQuery");
-var view = function (model) {
+var Control_Monad_JQuery = require("Control.Monad.JQuery");
+var mkEx2Model = function (firstName) {
+    return function (lastName) {
+        return function (morning) {
+            return {
+                firstName: firstName, 
+                lastName: lastName, 
+                morning: morning
+            };
+        };
+    };
+};
+var example2View = function (model) {
+    var greet = function (_1) {
+        return function (_2) {
+            return function (_3) {
+                if (_3) {
+                    return "Good morning, " + _1 + " " + _2 + "!";
+                };
+                return "Hello, " + _1 + " " + _2 + "!";
+            };
+        };
+    };
+    return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.text("First name: "))(function (_) {
+        return Data_DOM.textBox(model.firstName)([  ]);
+    })))(function (_3) {
+        return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.text("Last name: "))(function (_) {
+            return Data_DOM.textBox(model.lastName)([  ]);
+        })))(function (_2) {
+            return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.text("Morning: "))(function (_) {
+                return Data_DOM.checkBox(model.morning)([  ]);
+            })))(function (_1) {
+                var greeting = Prelude["<*>"](Control_Reactive.applyComputed({}))(Prelude["<*>"](Control_Reactive.applyComputed({}))(Prelude["<$>"](Control_Reactive.functorComputed({}))(greet)(Control_Reactive.toComputed(model.firstName)))(Control_Reactive.toComputed(model.lastName)))(Control_Reactive.toComputed(model.morning));
+                return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([ Data_DOM_Attributes.style("color: green;") ])(Data_DOM.label(greeting)([  ])))(function (_) {
+                    return Prelude["return"](Control_Monad_Free.monadFree(Data_DOM.functorHtmlF({})))(Prelude["<>"](Control_Reactive.semigroupSubscription({}))(_3)(Prelude["<>"](Control_Reactive.semigroupSubscription({}))(_2)(_1)));
+                });
+            });
+        });
+    });
+};
+var example2 = function (root) {
+    return function __do() {
+        var _1 = Prelude["<*>"](Control_Monad_Eff.applyEff({}))(Prelude["<*>"](Control_Monad_Eff.applyEff({}))(Prelude["<$>"](Control_Monad_Eff.functorEff({}))(mkEx2Model)(Control_Reactive.newRVar("John")))(Control_Reactive.newRVar("Smith")))(Control_Reactive.newRVar(false))();
+        return Data_DOM_Render_JQuery.renderJQuery(root)(example2View(_1))();
+    };
+};
+var main = Prelude[">>="](Control_Monad_Eff.bindEff({}))(Control_Monad_JQuery.select("body"))(example2);
+var example1View = function (model) {
     return Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM_Elements.div([  ])(Prelude[">>="](Control_Monad_Free.bindFree(Data_DOM.functorHtmlF({})))(Data_DOM.text("This value: "))(function (_) {
         return Data_DOM.textBox(model)([  ]);
     })))(function (_2) {
@@ -2612,22 +2726,27 @@ var view = function (model) {
         });
     });
 };
-var main = function __do() {
-    var _2 = Control_Reactive.newRVar("Test")();
-    var _1 = Control_Monad_JQuery.select("body")();
-    return Data_DOM_Render_JQuery.renderJQuery(_1)(view(_2))();
+var example1 = function (root) {
+    return function __do() {
+        var _1 = Control_Reactive.newRVar("Test")();
+        return Data_DOM_Render_JQuery.renderJQuery(root)(example1View(_1))();
+    };
 };
 module.exports = {
     main: main, 
-    view: view
+    example2: example2, 
+    example2View: example2View, 
+    mkEx2Model: mkEx2Model, 
+    example1: example1, 
+    example1View: example1View
 };
-},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.DOM":14,"Data.DOM.Elements":12,"Data.DOM.Render.JQuery":13,"Prelude":25}],24:[function(require,module,exports){
+},{"Control.Monad.Eff":6,"Control.Monad.Free":7,"Control.Monad.JQuery":8,"Control.Reactive":10,"Data.DOM":15,"Data.DOM.Attributes":12,"Data.DOM.Elements":13,"Data.DOM.Render.JQuery":14,"Prelude":26}],25:[function(require,module,exports){
 "use strict";
 function unsafeIndex(xs) {  return function(n) {    return xs[n];  };};
 module.exports = {
     unsafeIndex: unsafeIndex
 };
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 var LT = {
     ctor: "Prelude.LT", 
